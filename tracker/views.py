@@ -1,8 +1,22 @@
+# === Manager ===
+# tracker/500000000/home.html
+# tracker/500000000/project/1/process.html
+# tracker/500000000/project/1/people.html
+# tracker/500000000/project/1/summary.html
+
+# === Developer ===
+# tracker/100000000/home.html
+# tracker/100000000/project/1.html
+# tracker/100000000/project/1/dev_mode.html
+# tracker/100000000/project/1/debug_mode.html
+# tracker/100000000/project/1/manage_mode.html
+# tracker/100000000/project/1/report.html
+
 # from django.http import HttpResponse
 # from django.template import RequestContext, loader
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 
-from .models import Project
+from .models import Project, Developer, Manager
 
 import datetime
 
@@ -23,8 +37,19 @@ def index(request):
     #return HttpResponse(template.render(context))
     
 
-def detail(request, uid):
-    return HttpResponse("You're looking at user %s." % uid)
+def home(request, id):
+	if id < 50000000:
+		try:
+			developer = get_object_or_404(Developer, uid=id)
+		except Developer.DoesNotExist:
+			raise Http404("Developer does not exist")
+		return render(request, 'tracker/home.html', {'user': developer})
+	else:
+		try:
+			manager = get_object_or_404(Manager, uid=id)
+		except Manager.DoesNotExist:
+			raise Http404("Manager does not exist")
+		return render(request, 'tracker/home.html', {'user': manager})
 
 
 def results(request, uid):
@@ -34,4 +59,3 @@ def results(request, uid):
 
 def vote(request, uid):
     return HttpResponse("You're voting on user %s." % uid)
-

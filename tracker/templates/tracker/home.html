@@ -1,0 +1,7 @@
+{% if user %}
+    <ul>    
+        <li><a href="/tracker/{{ user.uid }}/">{{ user.name }}</a></li>
+    </ul>
+{% else %}
+    <p>No user here.</p>
+{% endif %}
