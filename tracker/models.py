@@ -2,6 +2,7 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 # Each model has a number of class variables representing a database field in the model.
 
@@ -27,7 +28,7 @@ class Choice(models.Model):
 # One-to-one:
 
 class Manager(models.Model):
-    uid = models.IntegerField(default=0)
+    uid = models.IntegerField(validators=[MinValueValidator(50000000), MaxValueValidator(99999999)], primary_key=True)
     name = models.CharField(max_length=100)
     password = models.CharField(max_length=20)
     
@@ -35,7 +36,7 @@ class Manager(models.Model):
         return self.name
 
 class Developer(models.Model):
-    uid = models.IntegerField(default=0)
+    uid = models.IntegerField(validators=[MinValueValidator(10000000), MaxValueValidator(49999999)], primary_key=True)
     name = models.CharField(max_length=100)
     password = models.CharField(max_length=20)
     
@@ -43,7 +44,7 @@ class Developer(models.Model):
         return self.name
 
 class Project(models.Model):
-    pid = models.IntegerField(default=0)
+    pid = models.IntegerField(default=0, primary_key=True)
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=200)
     manager = models.ForeignKey(Manager)
@@ -71,10 +72,11 @@ class Iteration(models.Model):
         return self.name
 
 class Defect(models.Model):
+    did = models.IntegerField(default=0, primary_key=True)
     type = models.IntegerField(default=0)
     description = models.CharField(max_length=1000)
     iteration = models.ForeignKey(Iteration)
-    developer = models.ForeignKey(Developer)
+    developer = models.ForeignKey(Developer) 
     
     def __unicode__(self):
         return self.type
