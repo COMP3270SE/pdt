@@ -1,24 +1,61 @@
-# === view ===
-# A view function is a Python function that takes a Web request and returns a Web response.
+# === Manager ===
+# tracker/500000000/home.html
+# tracker/500000000/project/1/process.html
+# tracker/500000000/project/1/people.html
+# tracker/500000000/project/1/summary.html
 
-from django.http import HttpResponse, HttpResponseNotFound
+# === Developer ===
+# tracker/100000000/home.html
+# tracker/100000000/project/1.html
+# tracker/100000000/project/1/dev_mode.html
+# tracker/100000000/project/1/debug_mode.html
+# tracker/100000000/project/1/manage_mode.html
+# tracker/100000000/project/1/report.html
+
+# from django.http import HttpResponse
+# from django.template import RequestContext, loader
+from django.shortcuts import get_object_or_404, render
+
+from .models import Project, Developer, Manager
 
 import datetime
 
 # Each view function takes at least one parameter, called request
-# request: an object that contains info about the current Web request that has triggered this view
-def current_datetime(request):
+def current_datetime(request, uid):
     now = datetime.datetime.now()
-    html = "<html><body>It is now %s.</body></html>" % now
-    # if() -> return HttpResponseNotFound('<h1>Page not found</h1>')
-    return HttpResponse(html)
+    return HttpResponse("<html><body>It is now %s.</body></html>" % now) 
 
 
+def index(request):
+    project_list = Project.objects.order_by('-pid')
+    context = {'project_list': project_list}
+    return render(request, 'tracker/index.html', context)
+    #template = loader.get_template('tracker/index.html')
+    #context = RequestContext(request, {
+    #    'project_list': project_list,
+    #})
+    #return HttpResponse(template.render(context))
+    
+
+def home(request, id):
+	if id < 50000000:
+		try:
+			developer = get_object_or_404(Developer, uid=id)
+		except Developer.DoesNotExist:
+			raise Http404("Developer does not exist")
+		return render(request, 'tracker/home.html', {'user': developer})
+	else:
+		try:
+			manager = get_object_or_404(Manager, uid=id)
+		except Manager.DoesNotExist:
+			raise Http404("Manager does not exist")
+		return render(request, 'tracker/home.html', {'user': manager})
 
 
-# To hook a view function to a particular URL with Django, use a URLconf.
-# See URL dispatcher for instructions.
-# === URLconf ===
-# A URLconf is like a table of contents for your Django-powered Web site.
-# Basically, it’s a mapping between URLs and the view functions that should be called for those URLs.
-# It’s how you tell Django, “For this URL, call this code, and for that URL, call that code.”
+def results(request, uid):
+    response = "You're looking at the results of user %s."
+    return HttpResponse(response % uid)
+
+
+def vote(request, uid):
+    return HttpResponse("You're voting on user %s." % uid)
