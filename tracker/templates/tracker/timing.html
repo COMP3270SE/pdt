@@ -1,125 +1,133 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 TRANSITIONAL//EN">
 <html>
 <head>
-<title>Online Stopwatch</title>
-<script type='text/javascript'>
-// 0/1 = start/end
-// 2 = state
-// 3 = length, ms
-// 4 = timer
-// 5 = epoch
-// 6 = disp el
-// 7 = lap count
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <title>Online Stopwatch</title>
+    <script type='text/javascript'>
+    // 0/1 = start/end
+    // 2 = state
+    // 3 = length, ms
+    // 4 = timer
+    // 5 = epoch
+    // 6 = disp el
+    // 7 = lap count
 
-var t=[0, 0, 0, 0, 0, 0, 0, 1];
+    var t=[0, 0, 0, 0, 0, 0, 0, 1];
 
-function ss() {
-	t[t[2]]=(new Date()).valueOf();
-	t[2]=1-t[2];
+    function ss(){
+        t[t[2]]=(new Date()).valueOf();
+        t[2]=1-t[2];
 
-	if (0==t[2]) {
-		clearInterval(t[4]);
-		t[3]+=t[1]-t[0];
-		var row=document.createElement('tr');
-		var td=document.createElement('td');
-		td.innerHTML=(t[7]++);
-		row.appendChild(td);
-		td=document.createElement('td');
-		td.innerHTML=format(t[1]-t[0]);
-		row.appendChild(td);
-		td=document.createElement('td');
-		td.innerHTML=format(t[3]);
-		row.appendChild(td);
-		document.getElementById('lap').appendChild(row);
-		t[4]=t[1]=t[0]=0;
-		disp();
-	} else {
-		t[4]=setInterval(disp, 43);
-	}
-}
-function r() {
-	if (t[2]) ss();
-	t[4]=t[3]=t[2]=t[1]=t[0]=0;
-	disp();
-	document.getElementById('lap').innerHTML='';
-	t[7]=1;
-}
+        if (0==t[2]) {
+            clearInterval(t[4]);
+            t[3]+=t[1]-t[0];
+            var row=document.createElement('tr');
+            var td=document.createElement('td');
+            td.innerHTML=(t[7]++);
+            row.appendChild(td);
+            td=document.createElement('td');
+            td.innerHTML=format(t[1]-t[0]);
+            row.appendChild(td);
+            td=document.createElement('td');
+            td.innerHTML=format(t[3]);
+            row.appendChild(td);
+            document.getElementById('lap').appendChild(row);
+            t[4]=t[1]=t[0]=0;
+            disp();
+        } else {
+            t[4]=setInterval(disp, 43);
+        }
+    }
+    function changeStatus( sbutton ) {
+    	ss();
+        if (sbutton.value==="Start" || sbutton.value==="Resume")
+            sbutton.value="Pause";
+        else sbutton.value="Resume";
+    }
+    function r() {
+        document.getElementById('Startbutton').value="Start";
+    	if (t[2]) ss();
+    	t[4]=t[3]=t[2]=t[1]=t[0]=0;
+    	disp();
+    	document.getElementById('lap').innerHTML='';
+    	t[7]=1;
+    }
 
-function disp() {
-	if (t[2]) t[1]=(new Date()).valueOf();
-	t[6].value=format(t[3]+t[1]-t[0]);
-}
-function format(ms) {
-	// used to do a substr, but whoops, different browsers, different formats
-	// so now, this ugly regex finds the time-of-day bit alone
-	var d=new Date(ms+t[5]).toString()
-		.replace(/.*([0-9][0-9]:[0-9][0-9]:[0-9][0-9]).*/, '$1');
-	var x=String(ms%1000);
-	while (x.length<3) x='0'+x;
-	d+='.'+x;
-	return d;
-}
+    function disp() {
+    	if (t[2]) t[1]=(new Date()).valueOf();
+    	t[6].value=format(t[3]+t[1]-t[0]);
+    }
+    function format(ms) {
+    	// used to do a substr, but whoops, different browsers, different formats
+    	// so now, this ugly regex finds the time-of-day bit alone
+    	var d=new Date(ms+t[5]).toString()
+    		.replace(/.*([0-9][0-9]:[0-9][0-9]:[0-9][0-9]).*/, '$1');
+    	var x=String(ms%1000);
+    	while (x.length<3) x='0'+x;
+    	d+='.'+x;
+    	return d;
+    }
 
-function load() {
-	t[5]=new Date(1970, 1, 1, 0, 0, 0, 0).valueOf();
-	t[6]=document.getElementById('disp');
+    function load() {
+    	t[5]=new Date(1970, 1, 1, 0, 0, 0, 0).valueOf();
+    	t[6]=document.getElementById('disp');
 
-	disp();
+    	disp();
 
-	if (!window.opener && window==window.top) {
-		document.getElementById('remote').style.visibility='visible';
-	}
-}
+    	if (!window.opener && window==window.top) {
+    		document.getElementById('remote').style.visibility='visible';
+    	}
+    }
 
-function remote() {
-	window.open(
-		document.location, '_blank', 'width=700,height=350'
-	);
-	return false;
-}
-</script>
-<style type='text/css'>
-#main button, #disp {
-	width: 8em;
-	vertical-align: middle;
-}
-#main button {
-	padding: 0.4em;
-	font-size: 1.1em;
-}
-#disp {
-	background-color: white;
-	font-size: 2em;
-	width: 7.25em;
-	font-family: "Courier New";
-}
 
-#main {
-	text-align: center;
-	white-space: nowrap;
-}
+    </script>
+    <style type='text/css'>
+    #main button, #disp {
+  
+    	vertical-align: middle;
+    }
+    #main button {
+        width: 6em;
+    	
+    	font-size: 1.5em;
+    }
 
-#remote {
-	position: absolute;
-	top: 1px;
-	right: 1px;
+    #main input[type='button']{
+        font-size: 1.5em;
+        width:6em;
+    }
+    #disp {
+    	background-color: white;
+    	font-size: 2em;
+    	width: 7.5em;
+    	font-family: "Courier New";
+    }
 
-	visibility: hidden;
-}
+    #main {
+    	text-align: center;
+    	white-space: nowrap;
+    }
 
-#lap {
-	margin-top: 0.5em;
-}
-</style>
+
+    #lap {
+    	margin-top: 0.5em;
+    }
+    </style>
 </head>
 
 <body onload='load();'>
-<button onclick='remote();' id='remote'>Remote</button>
+
 
 <div id='main'>
-	<button type='button' onclick='ss()' onfocus='this.blur()'>Start / Stop</button>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <a class="navbar-brand" >Timer</a>
+    </nav>
+    <br><br><br>
+    <h1>Let's start working!</h1>
+	<input type='button' value="Start" class="btn btn-info" onclick="return changeStatus(this)" onfocus='this.blur()' id='Startbutton'/>
 	<input type='text' id='disp' />
-	<button type='button' onclick='r()' onfocus='this.blur()'>Reset</button>
+	<button type='button' class="btn btn-info" onclick='r()' onfocus='this.blur()'>Reset</button>
 </div>
 <table border='1'>
 	<tr><th>Lap #</th><th>This Lap</th><th>Running Total</th></tr>
