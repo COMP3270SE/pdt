@@ -1,3 +1,17 @@
+# === Manager ===
+# tracker/500000000/home.html
+# tracker/500000000/project/1/process.html
+# tracker/500000000/project/1/people.html
+# tracker/500000000/project/1/summary.html
+
+# === Developer ===
+# tracker/100000000/home.html
+# tracker/100000000/project/1.html
+# tracker/100000000/project/1/dev_mode.html
+# tracker/100000000/project/1/debug_mode.html
+# tracker/100000000/project/1/manage_mode.html
+# tracker/100000000/project/1/report.html
+
 from django.conf.urls import url
 
 from . import views
