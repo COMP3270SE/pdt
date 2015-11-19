@@ -75,3 +75,11 @@ def results(request, uid):
 
 def vote(request, uid):
     return HttpResponse("You're voting on user %s." % uid)
+
+def timing(request, id):
+	return render(request,
+                  'tracker/timing.html',
+                  {'timing': datetime.datetime.now()})
+
+
+
