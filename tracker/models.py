@@ -80,6 +80,7 @@ class Workrecord(models.Model):
     starttime = models.DateTimeField(default=datetime.datetime.now, blank=True)
     endtime = models.DateTimeField(default=datetime.datetime.now, blank=True)
     developer = models.ForeignKey(Developer)
+    iteration = models.ForeignKey(Iteration)
     def __unicode__(self):
         return self.developer.name+str(wid)
     def duration(self):

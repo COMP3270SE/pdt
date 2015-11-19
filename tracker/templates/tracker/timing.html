@@ -125,14 +125,16 @@
     </nav>
     <br><br><br>
     <h1>Let's start working!</h1>
+    <br>
 	<input type='button' value="Start" class="btn btn-info" onclick="return changeStatus(this)" onfocus='this.blur()' id='Startbutton'/>
 	<input type='text' id='disp' />
 	<button type='button' class="btn btn-info" onclick='r()' onfocus='this.blur()'>Reset</button>
 </div>
-<table border='1'>
-	<tr><th>Lap #</th><th>This Lap</th><th>Running Total</th></tr>
-	<tbody id='lap'></tbody>
-</table>
+    <br><br><br>
+    <table class="table" >
+    	<tr><th>Lap #</th><th>This Lap</th><th>Running Total</th></tr>
+    	<tbody id='lap'></tbody>
+    </table>
 
 <script type="text/javascript">
 var _gaq = _gaq || [];
