@@ -25,8 +25,10 @@ urlpatterns = [
     url(r'^(?P<uid>[0-9]){8}/results/$', views.results, name='results'),
     # ex: /tracker/5/vote/
     url(r'^(?P<uid>[0-9]{8})/vote/$', views.vote, name='vote'), 
-    # tracker/X00000000/home.html
+    # tracker/X00000000/home/
     url(r'^(?P<id>[0-9]{8})/home/$', views.home, name='home'),
+    # tracker/X00000000/home/
+    url(r'^(?P<id>[0-9]{8})/timing/$', views.timing, name='timing'),
     # tracker/500000000/project/1/summary.html
     url(r'^(?P<user_id>[0-9]{8})/project/(?P<project_id>[0-9]+)/summary$', views.summary, name='summary'),
 ]

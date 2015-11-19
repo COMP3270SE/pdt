@@ -73,8 +73,17 @@ class Defect(models.Model):
     developer = models.ForeignKey(Developer) 
     
     def __unicode__(self):
-        return self.type
+        return str(self.id)+"-"+self.type
 
-
+class Workrecord(models.Model):
+    wid = models.IntegerField(default=0, primary_key=True)
+    starttime = models.DateTimeField(default=datetime.datetime.now, blank=True)
+    endtime = models.DateTimeField(default=datetime.datetime.now, blank=True)
+    developer = models.ForeignKey(Developer)
+    def __unicode__(self):
+        return self.developer.name+str(wid)
+    def duration(self):
+        return self.endtime-self.starttime
+                
 
 
