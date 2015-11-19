@@ -27,4 +27,6 @@ urlpatterns = [
     url(r'^(?P<uid>[0-9]{8})/vote/$', views.vote, name='vote'), 
     # tracker/X00000000/home.html
     url(r'^(?P<id>[0-9]{8})/home/$', views.home, name='home'),
+    # tracker/500000000/project/1/summary.html
+    url(r'^(?P<user_id>[0-9]{8})/project/(?P<project_id>[0-9]+)/summary$', views.summary, name='summary'),
 ]

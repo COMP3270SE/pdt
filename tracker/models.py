@@ -4,23 +4,6 @@ from django.db import models
 from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
 
-# Each model has a number of class variables representing a database field in the model.
-
-class Question(models.Model):
-    question_text = models.CharField(max_length=200)
-    pub_date = models.DateTimeField('date published')
-
-    def was_published_recently(self):
-        # customised method
-        return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
-
-
-class Choice(models.Model):
-    question = models.ForeignKey(Question)
-    choice_text = models.CharField(max_length=200)
-    votes = models.IntegerField(default=0)
-
-
 ########
 # Many-to-one: iteration - phase, phase - project, project - manager,
 #              defect - developer, defect - iteration
@@ -49,25 +32,36 @@ class Project(models.Model):
     description = models.CharField(max_length=200)
     manager = models.ForeignKey(Manager)
     developer = models.ManyToManyField(Developer)
+    est_SLOC = models.IntegerField(default=0)
 
     def __unicode__(self):
         return self.name
 
 class Phase(models.Model):
-    type = models.IntegerField(default=1)
+    type = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(4)])
+    phase_id = models.IntegerField(default=0, primary_key = True)
     project = models.ForeignKey(Project)
-    
+
     def __unicode__(self):
-        return self.type
+        if self.type == 1:
+	        return self.project.name + ": P1"
+        elif self.type == 2:
+	    	return self.project.name + ": P2"
+        elif self.type == 3:
+	    	return self.project.name + ": P3"
+        else:
+	    	return self.project.name + ": P4"
+
 
 class Iteration(models.Model):
     SLOC = models.IntegerField(default=0)
+    iteration_id = models.IntegerField(default=0, primary_key = True)
     effort = models.IntegerField(default=0)
     time_length = models.IntegerField(default=0)
     status = models.IntegerField(default=0)
     name = models.CharField(max_length=100)
     phase = models.ForeignKey(Phase)
-    
+       
     def __unicode__(self):
         return self.name
 
