@@ -55,35 +55,24 @@ def summary(request, user_id, project_id):
 	if id < 50000000:
 		raise Http404("You don't have permission to this file")
 	else:
-		project = Project()
-		phase = Phase()
-		iteration = Iteration()
 		manager = Manager.objects.filter(uid = user_id)
 		project = Project.objects.filter(pid = project_id)
-		phase_list = Phase.objects.filter(project = project)
+		#phase_list = Phase.objects.all()
+		phase_list = Phase.objects.filter(project__pid = project_id)
 		iteration_list = Iteration.objects.filter(phase__in = phase_list)
 
-		project_effort = project.get_effort()
-		phase_effort_list = [0, 0, 0, 0]
-		i = 0
-		for phase in phase_list:
-			phase_effort_list[i] = phase.get_effort()
-			++i
+		#phase_effort_list = [0, 0, 0, 0]
+		#i = 0
+		#for phase in phase_list:
+		#	phase_effort_list[i] = phase.get_effort()
+		#	++i
 
-		iteration_effort_list 
-
-		context = {
-		'manager': manager, 
-		'project': project, 
-		'phase_list': phase_list, 
-		'phase_effort_list': phase_effort_list,
-		'iteration_list': iteration_list
-		}
-		return render(request, 'tracker/summary.html', context)
-
-def results(request, uid):
-    response = "You're looking at the results of user %s."
-    return HttpResponse(response % uid)
+		return render(request, 'tracker/summary.html', {
+			'manager': manager, 
+			'project': project, 
+			'iteration_list': iteration_list,
+			'phase_list': phase_list
+			})
 
 def timing(request, id):
 	return render(request,

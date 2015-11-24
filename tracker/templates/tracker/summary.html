@@ -21,7 +21,7 @@
 
       <!-- Custom styles for this template -->
   	{% load staticfiles %}
-  	<link rel="stylesheet" type="text/css" href="{% static 'tracker/dashboard.css' %}" />
+  	<!--<link rel="stylesheet" type="text/css" href="{% static 'tracker/dashboard.css' %}" />-->
 
     <style>
       /*
@@ -138,17 +138,17 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Project Name</a>
+          {% for pro in project %}
+          <a class="navbar-brand" href="#">{{ pro.name }}</a>
+          {% endfor %}
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
             <li><a href="#">Home</a></li>
             
-		    	{% if manager %}  
-    			<li><a href="/tracker/{{ manager.uid }}/home">{{ manager }}</a></li>
-		    	{% else %}
-			    <li>No user here.</li>
-    			{% endif %}
+		    	{% for man in manager %}  
+    			<li><a href="/tracker/{{ manager.uid }}/home">{{ man.name }}</a></li>
+    			{% endfor %}
             
             <li><a href="#">Logout</a></li>
           </ul>
@@ -160,7 +160,6 @@
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li><a href="#">Home<span class="sr-only">(current)</span></a></li>
             <li><a href="#">UP</a></li>
             <li><a href="#">People</a></li>
             <li class="active"><a href="#">Summary</a></li>
@@ -184,18 +183,6 @@
                 </tr>
               </thead>
               <tbody>
-                <!-- {'est_sloc': est_sloc, 'phase_list': phase_list, 'iteration_list': iteration_list, 'iteration_num': iteration_num} 
-class Workrecord(models.Model):
-    wid = models.IntegerField(default=0, primary_key=True)
-    starttime = models.DateTimeField(default=datetime.datetime.now, blank=True)
-    endtime = models.DateTimeField(default=datetime.datetime.now, blank=True)
-    developer = models.ForeignKey(Developer)
-    iteration = models.ForeignKey(Iteration)
-    def __unicode__(self):
-        return self.developer.name+str(wid)
-    def duration(self):
-        return self.endtime-self.starttime
-              -->
                 <!-- n iterations -->              
               	{% for iteration in iteration_list %}
                 <tr>
@@ -222,16 +209,13 @@ class Workrecord(models.Model):
                 </tr>
               </thead>
               <tbody>
-                <!-- {'est_sloc': est_sloc, 'phase_list': phase_list, 'iteration_list': iteration_list, 'iteration_num': iteration_num} -->
                 <!-- 4 phases -->
                 {% for phase in phase_list %}
-                {% for phase_effort in phase_effort_list %}
                 <tr>
                   <td>{{ phase.type }}</td>
                   <td>{{ phase.phase_id }}</td>
                   <td>{{ phase_effort }}</td>
                 </tr>
-                {% endfor %}
                 {% endfor %}
               </tbody>
             </table>
@@ -248,7 +232,6 @@ class Workrecord(models.Model):
                 </tr>
               </thead>
               <tbody>
-                <!-- {'est_sloc': est_sloc, 'phase_list': phase_list, 'iteration_list': iteration_list, 'iteration_num': iteration_num} -->
                 <!-- 1 project -->
                 <tr>
                   <td></td>
@@ -270,10 +253,10 @@ class Workrecord(models.Model):
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="{% static 'dist/js/bootstrap.min.js' %}"></script>
+    <!--<script src="{% static 'dist/js/bootstrap.min.js' %}"></script>-->
     <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
-    <script src="{% static 'assets/js/vendor/holder.min.js' %}"></script>
+    <!--<script src="{% static 'assets/js/vendor/holder.min.js' %}"></script>-->
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="{% static 'assets/js/ie10-viewport-bug-workaround.js' %}"></script>
+    <!--<script src="{% static 'assets/js/ie10-viewport-bug-workaround.js' %}"></script>-->
   </body>
 </html>

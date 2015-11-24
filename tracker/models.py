@@ -36,7 +36,6 @@ class Project(models.Model):
 
     def __unicode__(self):
         return self.name
-
     def get_effort(self):
         phase_list = Phase.objects.filter(project=self)
         effort = 0
@@ -58,7 +57,6 @@ class Phase(models.Model):
 	    	return self.project.name + ": P3"
         else:
 	    	return self.project.name + ": P4"
-
     def get_effort(self):
         iteration_list = Iteration.objects.filter(phase=self)
         effort = 0
@@ -73,6 +71,7 @@ class Iteration(models.Model):
     status = models.IntegerField(default=0)
     name = models.CharField(max_length=100)
     phase = models.ForeignKey(Phase)
+    #objects = IterationManager()
        
     def __unicode__(self):
         return self.name
@@ -83,6 +82,7 @@ class Iteration(models.Model):
         for record in record_list:
             effort += record.getDuration()
         return effort
+
 
 class Defect(models.Model):
     did = models.IntegerField(default=0, primary_key=True)
