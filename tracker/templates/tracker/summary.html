@@ -178,8 +178,8 @@
                   <th>Iteration Name</th>
                   <th>Iteration Phase</th>
                   <th>SLOC</th>
-                  <th>Effort (person hours)</th>
-                  <th>SLOC (per person hours)</th>
+                  <th>Effort (person days)</th>
+                  <th>SLOC (per person days)</th>
                 </tr>
               </thead>
               <tbody>
@@ -189,7 +189,7 @@
                   <td>{{ iteration.name }}</td>
                   <td>{{ iteration.phase }}</td>
                   <td>{{ iteration.SLOC }}</td>
-                  <td></td>
+                  <td>{{ iteration.effort }}</td>
                   <td></td>
                 </tr>
                 {% endfor %}
@@ -204,8 +204,8 @@
                 <tr>
                   <th>Phase</th>
                   <th>SLOC</th>
-                  <th>Effort (person hours)</th>
-                  <th>SLOC (per person hours)</th>
+                  <th>Effort (person days)</th>
+                  <th>SLOC (per person days)</th>
                 </tr>
               </thead>
               <tbody>
@@ -214,7 +214,7 @@
                 <tr>
                   <td>{{ phase.type }}</td>
                   <td>{{ phase_sloc.SLOC__sum }}</td>
-                  <td></td>
+                  <td>{{ phase.effort }}</td>
                   <td></td>
                 </tr>
                 {% endfor %}
@@ -228,8 +228,8 @@
               <thead>
                 <tr>
                   <th>SLOC</th>
-                  <th>Effort (person hours)</th>
-                  <th>SLOC (per person hours)</th>
+                  <th>Effort (person days)</th>
+                  <th>SLOC (per person days)</th>
                 </tr>
               </thead>
               <tbody>
@@ -238,8 +238,10 @@
                   {% for p in project_SLOC %}
                   <td>{{ p.SLOC__sum }}</td>
                   {% endfor %}
+                  {% for pro in project %}
+                  <td>{{ pro.effort }}</td>
                   <td></td>
-                  <td></td>
+                  {% endfor %}
                 </tr>
                 
               </tbody>

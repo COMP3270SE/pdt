@@ -1,19 +1,3 @@
-# === Manager ===
-# tracker/500000000/home.html
-# tracker/500000000/project/1/process.html
-# tracker/500000000/project/1/people.html
-# tracker/500000000/project/1/summary.html
-
-# === Developer ===
-# tracker/100000000/home.html
-# tracker/100000000/project/1.html
-# tracker/100000000/project/1/dev_mode.html
-# tracker/100000000/project/1/debug_mode.html
-# tracker/100000000/project/1/manage_mode.html
-# tracker/100000000/project/1/report.html
-
-# from django.http import HttpResponse
-# from django.template import RequestContext, loader
 from django.shortcuts import get_object_or_404, render
 from django.db.models import Aggregate
 from django.db.models import Count, Sum
@@ -25,10 +9,6 @@ from .models import Workrecord
 import datetime
 
 # Each view function takes at least one parameter, called request
-def current_datetime(request, uid):
-    now = datetime.datetime.now()
-    return HttpResponse("<html><body>It is now %s.</body></html>" % now) 
-
 def index(request):
     project_list = Project.objects.order_by('-pid')
     context = {'project_list': project_list}
@@ -71,15 +51,13 @@ def summary(request, user_id, project_id):
 		phase_zip = zip(phase_list, phase_SLOC_list)
 
 		project_SLOC = [0]
-		project_SLOC[0] = Iteration.objects.filter(phase__in = phase_list).aggregate(Sum('SLOC'))
+		project_SLOC[0] = iteration_list.aggregate(Sum('SLOC'))
 
 		return render(request, 'tracker/summary.html', {
 			'manager': manager, 
 			'project': project, 
 			'iteration_list': iteration_list,
 			'phase_zip': phase_zip,
-			#'phase_list': phase_list,
-			#'phase_SLOC_list': phase_SLOC_list,
 			'project_SLOC': project_SLOC
 			})
 

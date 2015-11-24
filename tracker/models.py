@@ -1,7 +1,7 @@
 import datetime
 
 from django.db import models
-from django.utils import timezone
+from datetime import timedelta
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 ########
@@ -38,11 +38,11 @@ class Project(models.Model):
         return self.name
     
     @property
-    def get_effort(self):
+    def effort(self):
         phase_list = Phase.objects.filter(project=self)
         effort = 0
         for phase in phase_list:
-            effort += phase.get_effort()
+            effort += phase.effort
         return effort
 
 class Phase(models.Model):
@@ -61,11 +61,11 @@ class Phase(models.Model):
 	    	return self.project.name + ": P4"
     
     @property
-    def get_effort(self):
+    def effort(self):
         iteration_list = Iteration.objects.filter(phase__phase_id = self.phase_id)
         effort = 0
         for iteration in iteration_list:
-            effort += iteration.get_effort()
+            effort += iteration.effort
         return effort
 
 class Iteration(models.Model):
@@ -80,13 +80,12 @@ class Iteration(models.Model):
         return self.name
 
     @property
-    def get_effort(self):
+    def effort(self):
         record_list = Workrecord.objects.filter(iteration__iteration_id = self.iteration_id)
         effort = 0
         for record in record_list:
-            effort += record.getDuration()
+            effort += record.duration
         return effort
-
 
 class Defect(models.Model):
     did = models.IntegerField(default=0, primary_key=True)
@@ -105,45 +104,8 @@ class Workrecord(models.Model):
     developer = models.ForeignKey(Developer)
     iteration = models.ForeignKey(Iteration)
     def __unicode__(self):
-        return self.developer.name+str(wid)
+        return self.developer.name+str(self.wid)
     
     @property
-    def get_duration(self):
-        return self.endtime-self.starttime
- 
-
-
-
-'''
-
-@property
-    def total(self):
-        return self.qty * self.cost
-
-        
-
-However, if what you actually want to do is to add a method that does a queryset-level operation, 
-like objects.filter() or objects.get(), then your best bet is to define a custom Manager and add 
-your method there. Then you will be able to do model.objects.my_custom_method(). Again, see the 
-Django documentation on Managers.
-
-class PollManager(models.Manager):
-    def with_counts(self):
-        from django.db import connection
-        cursor = connection.cursor()
-        cursor.execute("""
-            SELECT p.id, p.question, p.poll_date, COUNT(*)
-            FROM polls_opinionpoll p, polls_response r
-            WHERE p.id = r.poll_id
-            GROUP BY p.id, p.question, p.poll_date
-            ORDER BY p.poll_date DESC""")
-        result_list = []
-        for row in cursor.fetchall():
-            p = self.model(id=row[0], question=row[1], poll_date=row[2])
-            p.num_responses = row[3]
-            result_list.append(p)
-        return result_list
-'''
-             
-
-
+    def duration(self):
+        return (self.endtime-self.starttime).days
