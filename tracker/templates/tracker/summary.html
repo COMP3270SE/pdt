@@ -202,7 +202,7 @@
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <th>Phase Name</th>
+                  <th>Phase</th>
                   <th>SLOC</th>
                   <th>Effort (person-months)</th>
                   <th>SLOC (person-months)</th>
@@ -210,11 +210,12 @@
               </thead>
               <tbody>
                 <!-- 4 phases -->
-                {% for phase in phase_list %}
+                {% for phase_sloc in phase_SLOC_list %}
                 <tr>
-                  <td>{{ phase.type }}</td>
-                  <td>{{ phase.phase_id }}</td>
-                  <td>{{ phase_effort }}</td>
+                  <td>{{ phase_sloc.SLOC__sum }}</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
                 </tr>
                 {% endfor %}
               </tbody>
@@ -234,7 +235,9 @@
               <tbody>
                 <!-- 1 project -->
                 <tr>
-                  <td></td>
+                  {% if project_SLOC %}
+                  <td>{{ project_sloc }}</td>
+                  {% endif %}
                   <td></td>
                   <td></td>
                 </tr>

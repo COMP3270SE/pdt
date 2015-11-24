@@ -36,6 +36,8 @@ class Project(models.Model):
 
     def __unicode__(self):
         return self.name
+    
+    @property
     def get_effort(self):
         phase_list = Phase.objects.filter(project=self)
         effort = 0
@@ -57,8 +59,10 @@ class Phase(models.Model):
 	    	return self.project.name + ": P3"
         else:
 	    	return self.project.name + ": P4"
+    
+    @property
     def get_effort(self):
-        iteration_list = Iteration.objects.filter(phase=self)
+        iteration_list = Iteration.objects.filter(phase__phase_id = self.phase_id)
         effort = 0
         for iteration in iteration_list:
             effort += iteration.get_effort()
@@ -71,13 +75,13 @@ class Iteration(models.Model):
     status = models.IntegerField(default=0)
     name = models.CharField(max_length=100)
     phase = models.ForeignKey(Phase)
-    #objects = IterationManager()
        
     def __unicode__(self):
         return self.name
 
+    @property
     def get_effort(self):
-        record_list = Workrecord.objects.filter(iteration=self)
+        record_list = Workrecord.objects.filter(iteration__iteration_id = self.iteration_id)
         effort = 0
         for record in record_list:
             effort += record.getDuration()
@@ -102,11 +106,22 @@ class Workrecord(models.Model):
     iteration = models.ForeignKey(Iteration)
     def __unicode__(self):
         return self.developer.name+str(wid)
-    def getDuration(self):
+    
+    @property
+    def get_duration(self):
         return self.endtime-self.starttime
  
 
+
+
 '''
+
+@property
+    def total(self):
+        return self.qty * self.cost
+
+        
+
 However, if what you actually want to do is to add a method that does a queryset-level operation, 
 like objects.filter() or objects.get(), then your best bet is to define a custom Manager and add 
 your method there. Then you will be able to do model.objects.my_custom_method(). Again, see the 

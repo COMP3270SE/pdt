@@ -15,6 +15,8 @@
 # from django.http import HttpResponse
 # from django.template import RequestContext, loader
 from django.shortcuts import get_object_or_404, render
+from django.db.models import Aggregate
+from django.db.models import Count, Sum
 
 from .models import Project, Developer, Manager
 from .models import Phase, Iteration, Defect
@@ -57,21 +59,25 @@ def summary(request, user_id, project_id):
 	else:
 		manager = Manager.objects.filter(uid = user_id)
 		project = Project.objects.filter(pid = project_id)
-		#phase_list = Phase.objects.all()
 		phase_list = Phase.objects.filter(project__pid = project_id)
 		iteration_list = Iteration.objects.filter(phase__in = phase_list)
 
-		#phase_effort_list = [0, 0, 0, 0]
-		#i = 0
-		#for phase in phase_list:
-		#	phase_effort_list[i] = phase.get_effort()
-		#	++i
+		phase_SLOC_list = [0, 0, 0, 0]
+		phase_SLOC_list[0] = Iteration.objects.filter(phase = phase_list[0]).aggregate(Sum('SLOC'))
+		phase_SLOC_list[1] = Iteration.objects.filter(phase = phase_list[1]).aggregate(Sum('SLOC'))
+		phase_SLOC_list[2] = Iteration.objects.filter(phase = phase_list[2]).aggregate(Sum('SLOC'))
+		phase_SLOC_list[3] = Iteration.objects.filter(phase = phase_list[3]).aggregate(Sum('SLOC'))
+		
+		project_SLOC = iteration_list.aggregate(Sum('SLOC'))
 
 		return render(request, 'tracker/summary.html', {
 			'manager': manager, 
 			'project': project, 
 			'iteration_list': iteration_list,
-			'phase_list': phase_list
+			#'phase_zip': phase_zip
+			#'phase_list': phase_list,
+			'phase_SLOC_list': phase_SLOC_list,
+			'project_SLOC': project_SLOC
 			})
 
 def timing(request, id):
