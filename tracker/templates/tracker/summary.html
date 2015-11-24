@@ -190,7 +190,7 @@
                   <td>{{ iteration.phase }}</td>
                   <td>{{ iteration.SLOC }}</td>
                   <td>{{ iteration.effort }}</td>
-                  <td></td>
+                  <td>{{ iteration.SLOC_effort }}</td>
                 </tr>
                 {% endfor %}
               </tbody>
@@ -210,12 +210,12 @@
               </thead>
               <tbody>
                 <!-- 4 phases -->
-                {% for phase, phase_sloc in phase_zip %}
+                {% for phase in phase_list %}
                 <tr>
                   <td>{{ phase.type }}</td>
-                  <td>{{ phase_sloc.SLOC__sum }}</td>
+                  <td>{{ phase.SLOC.sum }}</td>
                   <td>{{ phase.effort }}</td>
-                  <td></td>
+                  <td>{{ phase.SLOC_effort }}</td>
                 </tr>
                 {% endfor %}
               </tbody>
@@ -235,12 +235,10 @@
               <tbody>
                 <!-- 1 project -->
                 <tr>
-                  {% for p in project_SLOC %}
-                  <td>{{ p.SLOC__sum }}</td>
-                  {% endfor %}
                   {% for pro in project %}
+                  <td>{{ pro.SLOC.sum }}</td>                  
                   <td>{{ pro.effort }}</td>
-                  <td></td>
+                  <td>{{ pro.SLOC_effort }}</td>
                   {% endfor %}
                 </tr>
                 

@@ -3,6 +3,7 @@ import datetime
 from django.db import models
 from datetime import timedelta
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.db.models import Count, Sum
 
 ########
 # Many-to-one: iteration - phase, phase - project, project - manager,
@@ -38,12 +39,22 @@ class Project(models.Model):
         return self.name
     
     @property
+    def SLOC(self):
+        iteration_list = Iteration.objects.filter(phase__project__exact = self)
+        return iteration_list.aggregate(sum = Sum('SLOC'))
+
+    @property
     def effort(self):
         phase_list = Phase.objects.filter(project=self)
         effort = 0
         for phase in phase_list:
             effort += phase.effort
         return effort
+
+    @property
+    def SLOC_effort(self):
+        return self.SLOC['sum']/self.effort
+
 
 class Phase(models.Model):
     type = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(4)])
@@ -61,12 +72,20 @@ class Phase(models.Model):
 	    	return self.project.name + ": P4"
     
     @property
+    def SLOC(self):
+        return Iteration.objects.filter(phase = self).aggregate(sum = Sum('SLOC'))
+
+    @property
     def effort(self):
-        iteration_list = Iteration.objects.filter(phase__phase_id = self.phase_id)
+        iteration_list = Iteration.objects.filter(phase = self)
         effort = 0
         for iteration in iteration_list:
             effort += iteration.effort
         return effort
+
+    @property
+    def SLOC_effort(self):
+        return self.SLOC['sum']/self.effort
 
 class Iteration(models.Model):
     SLOC = models.IntegerField(default=0)
@@ -81,11 +100,15 @@ class Iteration(models.Model):
 
     @property
     def effort(self):
-        record_list = Workrecord.objects.filter(iteration__iteration_id = self.iteration_id)
+        record_list = Workrecord.objects.filter(iteration = self)
         effort = 0
         for record in record_list:
             effort += record.duration
         return effort
+
+    @property
+    def SLOC_effort(self):
+        return self.SLOC/self.effort
 
 class Defect(models.Model):
     did = models.IntegerField(default=0, primary_key=True)

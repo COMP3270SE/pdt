@@ -42,23 +42,13 @@ def summary(request, user_id, project_id):
 		phase_list = Phase.objects.filter(project__pid = project_id)
 		iteration_list = Iteration.objects.filter(phase__in = phase_list)
 
-		phase_SLOC_list = [0, 0, 0, 0]
-		phase_SLOC_list[0] = Iteration.objects.filter(phase = phase_list[0]).aggregate(Sum('SLOC'))
-		phase_SLOC_list[1] = Iteration.objects.filter(phase = phase_list[1]).aggregate(Sum('SLOC'))
-		phase_SLOC_list[2] = Iteration.objects.filter(phase = phase_list[2]).aggregate(Sum('SLOC'))
-		phase_SLOC_list[3] = Iteration.objects.filter(phase = phase_list[3]).aggregate(Sum('SLOC'))
-
-		phase_zip = zip(phase_list, phase_SLOC_list)
-
-		project_SLOC = [0]
-		project_SLOC[0] = iteration_list.aggregate(Sum('SLOC'))
-
 		return render(request, 'tracker/summary.html', {
 			'manager': manager, 
 			'project': project, 
 			'iteration_list': iteration_list,
-			'phase_zip': phase_zip,
-			'project_SLOC': project_SLOC
+			'phase_list': phase_list
+			#'phase_zip': phase_zip,
+			#'project_SLOC': project_SLOC
 			})
 
 def timing(request, id):
