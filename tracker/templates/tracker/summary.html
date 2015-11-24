@@ -178,8 +178,8 @@
                   <th>Iteration Name</th>
                   <th>Iteration Phase</th>
                   <th>SLOC</th>
-                  <th>Effort (person-months)</th>
-                  <th>SLOC (person-months)</th>
+                  <th>Effort (person hours)</th>
+                  <th>SLOC (per person hours)</th>
                 </tr>
               </thead>
               <tbody>
@@ -204,16 +204,16 @@
                 <tr>
                   <th>Phase</th>
                   <th>SLOC</th>
-                  <th>Effort (person-months)</th>
-                  <th>SLOC (person-months)</th>
+                  <th>Effort (person hours)</th>
+                  <th>SLOC (per person hours)</th>
                 </tr>
               </thead>
               <tbody>
                 <!-- 4 phases -->
-                {% for phase_sloc in phase_SLOC_list %}
+                {% for phase, phase_sloc in phase_zip %}
                 <tr>
+                  <td>{{ phase.type }}</td>
                   <td>{{ phase_sloc.SLOC__sum }}</td>
-                  <td></td>
                   <td></td>
                   <td></td>
                 </tr>
@@ -228,16 +228,16 @@
               <thead>
                 <tr>
                   <th>SLOC</th>
-                  <th>Effort (person-months)</th>
-                  <th>SLOC (person-months)</th>
+                  <th>Effort (person hours)</th>
+                  <th>SLOC (per person hours)</th>
                 </tr>
               </thead>
               <tbody>
                 <!-- 1 project -->
                 <tr>
-                  {% if project_SLOC %}
-                  <td>{{ project_sloc }}</td>
-                  {% endif %}
+                  {% for p in project_SLOC %}
+                  <td>{{ p.SLOC__sum }}</td>
+                  {% endfor %}
                   <td></td>
                   <td></td>
                 </tr>

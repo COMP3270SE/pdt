@@ -54,7 +54,7 @@ def home(request, id):
 		return render(request, 'tracker/home.html', {'user': manager})
 
 def summary(request, user_id, project_id):
-	if id < 50000000:
+	if user_id < 50000000:
 		raise Http404("You don't have permission to this file")
 	else:
 		manager = Manager.objects.filter(uid = user_id)
@@ -67,16 +67,19 @@ def summary(request, user_id, project_id):
 		phase_SLOC_list[1] = Iteration.objects.filter(phase = phase_list[1]).aggregate(Sum('SLOC'))
 		phase_SLOC_list[2] = Iteration.objects.filter(phase = phase_list[2]).aggregate(Sum('SLOC'))
 		phase_SLOC_list[3] = Iteration.objects.filter(phase = phase_list[3]).aggregate(Sum('SLOC'))
-		
-		project_SLOC = iteration_list.aggregate(Sum('SLOC'))
+
+		phase_zip = zip(phase_list, phase_SLOC_list)
+
+		project_SLOC = [0]
+		project_SLOC[0] = Iteration.objects.filter(phase__in = phase_list).aggregate(Sum('SLOC'))
 
 		return render(request, 'tracker/summary.html', {
 			'manager': manager, 
 			'project': project, 
 			'iteration_list': iteration_list,
-			#'phase_zip': phase_zip
+			'phase_zip': phase_zip,
 			#'phase_list': phase_list,
-			'phase_SLOC_list': phase_SLOC_list,
+			#'phase_SLOC_list': phase_SLOC_list,
 			'project_SLOC': project_SLOC
 			})
 
