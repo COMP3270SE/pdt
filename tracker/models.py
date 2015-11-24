@@ -37,6 +37,13 @@ class Project(models.Model):
     def __unicode__(self):
         return self.name
 
+    def get_effort(self):
+        phase_list = Phase.objects.filter(project=self)
+        effort = 0
+        for phase in phase_list:
+            effort += phase.get_effort()
+        return effort
+
 class Phase(models.Model):
     type = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(4)])
     phase_id = models.IntegerField(default=0, primary_key = True)
@@ -52,11 +59,16 @@ class Phase(models.Model):
         else:
 	    	return self.project.name + ": P4"
 
+    def get_effort(self):
+        iteration_list = Iteration.objects.filter(phase=self)
+        effort = 0
+        for iteration in iteration_list:
+            effort += iteration.get_effort()
+        return effort
 
 class Iteration(models.Model):
     SLOC = models.IntegerField(default=0)
     iteration_id = models.IntegerField(default=0, primary_key = True)
-    effort = models.IntegerField(default=0)
     time_length = models.IntegerField(default=0)
     status = models.IntegerField(default=0)
     name = models.CharField(max_length=100)
@@ -64,6 +76,13 @@ class Iteration(models.Model):
        
     def __unicode__(self):
         return self.name
+
+    def get_effort(self):
+        record_list = Workrecord.objects.filter(iteration=self)
+        effort = 0
+        for record in record_list:
+            effort += record.getDuration()
+        return effort
 
 class Defect(models.Model):
     did = models.IntegerField(default=0, primary_key=True)
@@ -80,10 +99,36 @@ class Workrecord(models.Model):
     starttime = models.DateTimeField(default=datetime.datetime.now, blank=True)
     endtime = models.DateTimeField(default=datetime.datetime.now, blank=True)
     developer = models.ForeignKey(Developer)
+    iteration = models.ForeignKey(Iteration)
     def __unicode__(self):
         return self.developer.name+str(wid)
-    def duration(self):
+    def getDuration(self):
         return self.endtime-self.starttime
-                
+ 
+
+'''
+However, if what you actually want to do is to add a method that does a queryset-level operation, 
+like objects.filter() or objects.get(), then your best bet is to define a custom Manager and add 
+your method there. Then you will be able to do model.objects.my_custom_method(). Again, see the 
+Django documentation on Managers.
+
+class PollManager(models.Manager):
+    def with_counts(self):
+        from django.db import connection
+        cursor = connection.cursor()
+        cursor.execute("""
+            SELECT p.id, p.question, p.poll_date, COUNT(*)
+            FROM polls_opinionpoll p, polls_response r
+            WHERE p.id = r.poll_id
+            GROUP BY p.id, p.question, p.poll_date
+            ORDER BY p.poll_date DESC""")
+        result_list = []
+        for row in cursor.fetchall():
+            p = self.model(id=row[0], question=row[1], poll_date=row[2])
+            p.num_responses = row[3]
+            result_list.append(p)
+        return result_list
+'''
+             
 
 

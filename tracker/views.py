@@ -18,6 +18,7 @@ from django.shortcuts import get_object_or_404, render
 
 from .models import Project, Developer, Manager
 from .models import Phase, Iteration, Defect
+from .models import Workrecord
 
 import datetime
 
@@ -25,7 +26,6 @@ import datetime
 def current_datetime(request, uid):
     now = datetime.datetime.now()
     return HttpResponse("<html><body>It is now %s.</body></html>" % now) 
-
 
 def index(request):
     project_list = Project.objects.order_by('-pid')
@@ -37,7 +37,6 @@ def index(request):
     #})
     #return HttpResponse(template.render(context))
     
-
 def home(request, id):
 	if id < 50000000:
 		try:
@@ -56,25 +55,35 @@ def summary(request, user_id, project_id):
 	if id < 50000000:
 		raise Http404("You don't have permission to this file")
 	else:
-		try:
-			est_sloc = get_object_or_404(Project, pid = project_id)
-			phase_list = Phase.objects.all()
-			#phase_list = Phase.objects.filter(project__pid__ = project_id)
-			iteration_list = Iteration.objects.filter(phase__in = phase_list)
-			iteration_num = len(iteration_list)
-		except Project.DoesNotExist:
-			raise Http404("Project does not exist")
-		return render(request, 'tracker/summary.html', {'est_sloc': est_sloc, 'phase_list': phase_list, 'iteration_list': iteration_list, 'iteration_num': iteration_num})
+		project = Project()
+		phase = Phase()
+		iteration = Iteration()
+		manager = Manager.objects.filter(uid = user_id)
+		project = Project.objects.filter(pid = project_id)
+		phase_list = Phase.objects.filter(project = project)
+		iteration_list = Iteration.objects.filter(phase__in = phase_list)
 
+		project_effort = project.get_effort()
+		phase_effort_list = [0, 0, 0, 0]
+		i = 0
+		for phase in phase_list:
+			phase_effort_list[i] = phase.get_effort()
+			++i
 
+		iteration_effort_list 
+
+		context = {
+		'manager': manager, 
+		'project': project, 
+		'phase_list': phase_list, 
+		'phase_effort_list': phase_effort_list,
+		'iteration_list': iteration_list
+		}
+		return render(request, 'tracker/summary.html', context)
 
 def results(request, uid):
     response = "You're looking at the results of user %s."
     return HttpResponse(response % uid)
-
-
-def vote(request, uid):
-    return HttpResponse("You're voting on user %s." % uid)
 
 def timing(request, id):
 	return render(request,

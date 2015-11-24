@@ -19,16 +19,10 @@ from . import views
 urlpatterns = [
     # ex: /tracker/
     url(r'^$', views.index, name='index'),
-    # ex: /5/time/
-    url(r'^(?P<uid>[0-9]{8})/time/$', views.current_datetime, name='current_datetime'),
-    # ex: /tracker/5/results/
-    url(r'^(?P<uid>[0-9]){8}/results/$', views.results, name='results'),
-    # ex: /tracker/5/vote/
-    url(r'^(?P<uid>[0-9]{8})/vote/$', views.vote, name='vote'), 
-    # tracker/X00000000/home/
+    # http://localhost:8000/tracker/50000000/home/
     url(r'^(?P<id>[0-9]{8})/home/$', views.home, name='home'),
-    # tracker/X00000000/home/
+    # http://localhost:8000/tracker/50000000/timing/
     url(r'^(?P<id>[0-9]{8})/timing/$', views.timing, name='timing'),
-    # tracker/500000000/project/1/summary.html
-    url(r'^(?P<user_id>[0-9]{8})/project/(?P<project_id>[0-9]+)/summary$', views.summary, name='summary'),
+    # http://localhost:8000/tracker/50000000/project/1/summary/
+    url(r'^(?P<user_id>[0-9]{8})/project/(?P<project_id>[0-9]+)/summary/$', views.summary, name='summary'),
 ]

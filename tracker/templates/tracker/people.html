@@ -144,14 +144,17 @@
           <ul class="nav navbar-nav navbar-right">
             <li><a href="#">Home</a></li>
             
-		    	{% if manager %}  
-    			<li><a href="/tracker/{{ manager.uid }}/home">{{ manager }}</a></li>
-		    	{% else %}
+			{% if user %}  
+    			<li><a href="/tracker/{{ user.uid }}/">{{ user.name }}</a></li>
+			{% else %}
 			    <li>No user here.</li>
-    			{% endif %}
+			{% endif %}
             
             <li><a href="#">Logout</a></li>
           </ul>
+          <form class="navbar-form navbar-right">
+            <input type="text" class="form-control" placeholder="Search...">
+          </form>
         </div>
       </div>
     </nav>
@@ -165,92 +168,66 @@
             <li><a href="#">People</a></li>
             <li class="active"><a href="#">Summary</a></li>
           </ul>
-
+          
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">Project Summary</h1>
+          <h1 class="page-header">Dashboard</h1>
 
-          <h2 class="sub-header"> >>> Metrics 1</h2>
+          <div class="row placeholders">
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <img data-src="holder.js/200x200/auto/sky" class="img-responsive" alt="Generic placeholder thumbnail">
+              <h4>Label</h4>
+              <span class="text-muted">Something else</span>
+            </div>
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <img data-src="holder.js/200x200/auto/vine" class="img-responsive" alt="Generic placeholder thumbnail">
+              <h4>Label</h4>
+              <span class="text-muted">Something else</span>
+            </div>
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <img data-src="holder.js/200x200/auto/sky" class="img-responsive" alt="Generic placeholder thumbnail">
+              <h4>Label</h4>
+              <span class="text-muted">Something else</span>
+            </div>
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <img data-src="holder.js/200x200/auto/vine" class="img-responsive" alt="Generic placeholder thumbnail">
+              <h4>Label</h4>
+              <span class="text-muted">Something else</span>
+            </div>
+          </div>
+
+          <h2 class="sub-header">Metrics 1</h2>
           <div class="table-responsive">
-            <h3>Iteration</h3>
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <th>Iteration Name</th>
-                  <th>Iteration Phase</th>
-                  <th>SLOC</th>
+                  <th>Delivered SLOC</th>
                   <th>Effort (person-months)</th>
-                  <th>SLOC (person-months)</th>
+                  <th>Delivered SLOC (person-months)</th>
                 </tr>
               </thead>
               <tbody>
-                <!-- {'est_sloc': est_sloc, 'phase_list': phase_list, 'iteration_list': iteration_list, 'iteration_num': iteration_num} 
-class Workrecord(models.Model):
-    wid = models.IntegerField(default=0, primary_key=True)
-    starttime = models.DateTimeField(default=datetime.datetime.now, blank=True)
-    endtime = models.DateTimeField(default=datetime.datetime.now, blank=True)
-    developer = models.ForeignKey(Developer)
-    iteration = models.ForeignKey(Iteration)
-    def __unicode__(self):
-        return self.developer.name+str(wid)
-    def duration(self):
-        return self.endtime-self.starttime
-              -->
+                <!-- {'est_sloc': est_sloc, 'phase_list': phase_list, 'iteration_list': iteration_list, 'iteration_num': iteration_num} -->
                 <!-- n iterations -->              
               	{% for iteration in iteration_list %}
                 <tr>
-                  <td>{{ iteration.name }}</td>
-                  <td>{{ iteration.phase }}</td>
                   <td>{{ iteration.SLOC }}</td>
-                  <td></td>
-                  <td></td>
+                  <td>{{ iteration.SLOC }}</td>
+                  <td>{{ iteration.SLOC }}</td>
                 </tr>
                 {% endfor %}
-              </tbody>
-            </table>
-          </div>
-
-          <div class="table-responsive">
-            <h3>Phase</h3>
-            <table class="table table-striped">
-              <thead>
+              	
+              	<!-- 4 phases -->
+              	{% for phase in phase_list %}
                 <tr>
-                  <th>Phase Name</th>
-                  <th>SLOC</th>
-                  <th>Effort (person-months)</th>
-                  <th>SLOC (person-months)</th>
-                </tr>
-              </thead>
-              <tbody>
-                <!-- {'est_sloc': est_sloc, 'phase_list': phase_list, 'iteration_list': iteration_list, 'iteration_num': iteration_num} -->
-                <!-- 4 phases -->
-                {% for phase in phase_list %}
-                {% for phase_effort in phase_effort_list %}
-                <tr>
-                  <td>{{ phase.type }}</td>
-                  <td>{{ phase.phase_id }}</td>
-                  <td>{{ phase_effort }}</td>
+                  <td>1</td>
+                  <td>2</td>
+                  <td>3</td>
                 </tr>
                 {% endfor %}
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-
-          <div class="table-responsive">
-            <h3>Project</h3>
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>SLOC</th>
-                  <th>Effort (person-months)</th>
-                  <th>SLOC (person-months)</th>
-                </tr>
-              </thead>
-              <tbody>
-                <!-- {'est_sloc': est_sloc, 'phase_list': phase_list, 'iteration_list': iteration_list, 'iteration_num': iteration_num} -->
+                
                 <!-- 1 project -->
-                <tr>
+              	<tr>
                   <td></td>
                   <td></td>
                   <td></td>
@@ -259,9 +236,6 @@ class Workrecord(models.Model):
               </tbody>
             </table>
           </div>
-
-
-
         </div>
       </div>
     </div>
