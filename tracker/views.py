@@ -1,20 +1,6 @@
-# === Manager ===
-# tracker/500000000/home.html
-# tracker/500000000/project/1/process.html
-# tracker/500000000/project/1/people.html
-# tracker/500000000/project/1/summary.html
-
-# === Developer ===
-# tracker/100000000/home.html
-# tracker/100000000/project/1.html
-# tracker/100000000/project/1/dev_mode.html
-# tracker/100000000/project/1/debug_mode.html
-# tracker/100000000/project/1/manage_mode.html
-# tracker/100000000/project/1/report.html
-
-# from django.http import HttpResponse
-# from django.template import RequestContext, loader
 from django.shortcuts import get_object_or_404, render
+from django.db.models import Aggregate
+from django.db.models import Count, Sum
 
 from .models import Project, Developer, Manager
 from .models import Phase, Iteration, Defect
@@ -23,10 +9,6 @@ from .models import Workrecord
 import datetime
 
 # Each view function takes at least one parameter, called request
-def current_datetime(request, uid):
-    now = datetime.datetime.now()
-    return HttpResponse("<html><body>It is now %s.</body></html>" % now) 
-
 def index(request):
     project_list = Project.objects.order_by('-pid')
     context = {'project_list': project_list}
@@ -52,20 +34,13 @@ def home(request, id):
 		return render(request, 'tracker/home.html', {'user': manager})
 
 def summary(request, user_id, project_id):
-	if id < 50000000:
+	if user_id < 50000000:
 		raise Http404("You don't have permission to this file")
 	else:
 		manager = Manager.objects.filter(uid = user_id)
 		project = Project.objects.filter(pid = project_id)
-		#phase_list = Phase.objects.all()
 		phase_list = Phase.objects.filter(project__pid = project_id)
 		iteration_list = Iteration.objects.filter(phase__in = phase_list)
-
-		#phase_effort_list = [0, 0, 0, 0]
-		#i = 0
-		#for phase in phase_list:
-		#	phase_effort_list[i] = phase.get_effort()
-		#	++i
 
 		return render(request, 'tracker/summary.html', {
 			'manager': manager, 

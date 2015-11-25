@@ -1,8 +1,9 @@
 import datetime
 
 from django.db import models
-from django.utils import timezone
+from datetime import timedelta
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.db.models import Count, Sum
 
 ########
 # Many-to-one: iteration - phase, phase - project, project - manager,
@@ -36,12 +37,45 @@ class Project(models.Model):
 
     def __unicode__(self):
         return self.name
-    def get_effort(self):
+    
+    @property
+    def SLOC(self):
+        iteration_list = Iteration.objects.filter(phase__project__exact = self)
+        return iteration_list.aggregate(sum = Sum('SLOC'))
+
+    @property
+    def effort(self):
         phase_list = Phase.objects.filter(project=self)
         effort = 0
         for phase in phase_list:
-            effort += phase.get_effort()
-        return effort
+            effort += phase.effort
+        return round(effort, 2)
+
+    @property
+    def SLOC_effort(self):
+        return round(self.SLOC['sum']/self.effort, 2)
+
+    @property
+    def defect_in(self):
+        iteration_list = Iteration.objects.filter(phase__project__exact = self)
+        return Defect.objects.filter(in_iteration__in = iteration_list).count()
+
+    @property
+    def defect_out(self):
+        iteration_list = Iteration.objects.filter(phase__project__exact = self)
+        return Defect.objects.filter(out_iteration__in = iteration_list).count()
+
+    @property
+    def defect_in_rate(self):
+        return round(self.defect_in/self.effort, 2)
+
+    @property
+    def defect_out_rate(self):
+        return round(self.defect_out/self.effort, 2)
+
+    @property
+    def defect_density(self):
+        return float(self.defect_in)/ float(1000*self.SLOC['sum'])
 
 class Phase(models.Model):
     type = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(4)])
@@ -57,12 +91,44 @@ class Phase(models.Model):
 	    	return self.project.name + ": P3"
         else:
 	    	return self.project.name + ": P4"
-    def get_effort(self):
-        iteration_list = Iteration.objects.filter(phase=self)
+    
+    @property
+    def SLOC(self):
+        return Iteration.objects.filter(phase = self).aggregate(sum = Sum('SLOC'))
+
+    @property
+    def effort(self):
+        iteration_list = Iteration.objects.filter(phase = self)
         effort = 0
         for iteration in iteration_list:
-            effort += iteration.get_effort()
-        return effort
+            effort += iteration.effort
+        return round(effort, 2)
+
+    @property
+    def SLOC_effort(self):
+        return round(self.SLOC['sum']/self.effort)
+
+    @property
+    def defect_in(self):
+        iteration_list = Iteration.objects.filter(phase = self)
+        return Defect.objects.filter(in_iteration__in = iteration_list).count()
+
+    @property
+    def defect_out(self):
+        iteration_list = Iteration.objects.filter(phase = self)
+        return Defect.objects.filter(out_iteration__in = iteration_list).count()
+
+    @property
+    def defect_in_rate(self):
+        return round(self.defect_in/self.effort, 2)
+
+    @property
+    def defect_out_rate(self):
+        return round(self.defect_out/self.effort, 2)
+
+    @property
+    def defect_density(self):
+        return float(self.defect_in)/ float(1000*self.SLOC['sum'])
 
 class Iteration(models.Model):
     SLOC = models.IntegerField(default=0)
@@ -71,28 +137,52 @@ class Iteration(models.Model):
     status = models.IntegerField(default=0)
     name = models.CharField(max_length=100)
     phase = models.ForeignKey(Phase)
-    #objects = IterationManager()
        
     def __unicode__(self):
         return self.name
 
-    def get_effort(self):
-        record_list = Workrecord.objects.filter(iteration=self)
+    @property
+    def effort(self):
+        record_list = Workrecord.objects.filter(iteration = self)
         effort = 0
         for record in record_list:
-            effort += record.getDuration()
-        return effort
+            effort += record.duration
+        return round(effort, 2)
 
+    @property
+    def SLOC_effort(self):
+        return round(self.SLOC/self.effort, 2)
+
+    @property
+    def defect_in(self):
+        return Defect.objects.filter(in_iteration = self).count()
+
+    @property
+    def defect_out(self):
+        return Defect.objects.filter(out_iteration = self).count()
+
+    @property
+    def defect_in_rate(self):
+        return round(self.defect_in/self.effort, 2)
+
+    @property
+    def defect_out_rate(self):
+        return round(self.defect_out/self.effort, 2)
+
+    @property
+    def defect_density(self):
+        return float(self.defect_in)/ float(1000*self.SLOC)
 
 class Defect(models.Model):
     did = models.IntegerField(default=0, primary_key=True)
     type = models.IntegerField(default=0)
     description = models.CharField(max_length=1000)
-    iteration = models.ForeignKey(Iteration)
+    in_iteration = models.ForeignKey(Iteration, related_name='injection', default=1)
+    out_iteration = models.ForeignKey(Iteration, related_name='removal', default=1)
     developer = models.ForeignKey(Developer) 
     
     def __unicode__(self):
-        return str(self.id)+"-"+self.type
+        return str(self.did)+"-"+str(self.type)+": in-"+str(self.in_iteration)+", out-"+str(self.out_iteration)
 
 class Workrecord(models.Model):
     wid = models.IntegerField(default=0, primary_key=True)
@@ -101,34 +191,9 @@ class Workrecord(models.Model):
     developer = models.ForeignKey(Developer)
     iteration = models.ForeignKey(Iteration)
     def __unicode__(self):
-        return self.developer.name+str(wid)
-    def getDuration(self):
-        return self.endtime-self.starttime
- 
-
-'''
-However, if what you actually want to do is to add a method that does a queryset-level operation, 
-like objects.filter() or objects.get(), then your best bet is to define a custom Manager and add 
-your method there. Then you will be able to do model.objects.my_custom_method(). Again, see the 
-Django documentation on Managers.
-
-class PollManager(models.Manager):
-    def with_counts(self):
-        from django.db import connection
-        cursor = connection.cursor()
-        cursor.execute("""
-            SELECT p.id, p.question, p.poll_date, COUNT(*)
-            FROM polls_opinionpoll p, polls_response r
-            WHERE p.id = r.poll_id
-            GROUP BY p.id, p.question, p.poll_date
-            ORDER BY p.poll_date DESC""")
-        result_list = []
-        for row in cursor.fetchall():
-            p = self.model(id=row[0], question=row[1], poll_date=row[2])
-            p.num_responses = row[3]
-            result_list.append(p)
-        return result_list
-'''
-             
-
-
+        return str(self.wid)+self.developer.name
+    
+    @property
+    def duration(self):
+        return (self.endtime-self.starttime).total_seconds()/3600
+        #return (self.endtime-self.starttime).days
