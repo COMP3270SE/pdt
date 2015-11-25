@@ -3,7 +3,7 @@
 <head>
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-    <title>Online Stopwatch</title>
+    <title>Developing Mode</title>
     <script type='text/javascript'>
     // 0/1 = start/end
     // 2 = state
@@ -24,13 +24,13 @@
             t[3]+=t[1]-t[0];
             var row=document.createElement('tr');
             var td=document.createElement('td');
-            td.innerHTML=(t[7]++);
+            td.innerHTML=(t[7]++);// No.
             row.appendChild(td);
             td=document.createElement('td');
-            td.innerHTML=format(t[1]-t[0]);
+            td.innerHTML=format(t[1]-t[0]);// time interval
             row.appendChild(td);
             td=document.createElement('td');
-            td.innerHTML=format(t[3]);
+            td.innerHTML=format(t[3]);// total time
             row.appendChild(td);
             document.getElementById('lap').appendChild(row);
             t[4]=t[1]=t[0]=0;

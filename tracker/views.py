@@ -77,7 +77,7 @@ def summary(request, user_id, project_id):
 def timing(request, id):
 	return render(request,
                   'tracker/timing.html',
-                  {'timing': datetime.datetime.now()})
+                  {'user': developer})
 
 
 
