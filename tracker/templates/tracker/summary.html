@@ -261,7 +261,7 @@
                   <th>Defects Removed</th>
                   <th>Injection Rate (per person-hour)</th>
                   <th>Removal Rate (per person-hour)</th>
-                  <th>Defect Density (per KSLC)<th>
+                  <th>Defect Density (per KSLOC)<th>
                   <th>Yield</th>
                 </tr>
               </thead>
@@ -273,9 +273,9 @@
                   <td>{{ iteration.phase }}</td>
                   <td>{{ iteration.defect_in }}</td>
                   <td>{{ iteration.defect_out }}</td>
-                  <td>{{ iteration.defect_in_rate}}</td>
-                  <td>{{ iteration.defect_out_rate}}</td>
-                  <td></td>
+                  <td>{{ iteration.defect_in_rate }}</td>
+                  <td>{{ iteration.defect_out_rate }}</td>
+                  <td>{{ iteration.defect_density }}</td>
                   <td></td>
                 </tr>
                 {% endfor %}
@@ -293,7 +293,7 @@
                   <th>Defects Removed</th>
                   <th>Injection Rate (per person-hour)</th>
                   <th>Removal Rate (per person-hour)</th>
-                  <th>Defect Density (per KSLC)<th>
+                  <th>Defect Density (per KSLOC)<th>
                   <th>Yield</th>
                 </tr>
               </thead>
@@ -304,9 +304,9 @@
                   <td>{{ phase.type }}</td>
                   <td>{{ phase.defect_in }}</td>
                   <td>{{ phase.defect_out }}</td>
-                  <td>{{ phase.defect_in_rate}}</td>
+                  <td>{{ phase.defect_in_rate }}</td>
                   <td>{{ phase.defect_out_rate }}</td>
-                  <td></td>
+                  <td>{{ phase.defect_density }}</td>
                   <td></td>
                 </tr>
                 {% endfor %}
@@ -323,7 +323,7 @@
                   <th>Defects Removed</th>
                   <th>Injection Rate (per person-hour)</th>
                   <th>Removal Rate (per person-hour)</th>
-                  <th>Defect Density (per KSLC)<th>
+                  <th>Defect Density (per KSLOC)<th>
                   <th>Yield</th>
                 </tr>
               </thead>
@@ -335,7 +335,7 @@
                   <td>{{ pro.defect_out }}</td>
                   <td>{{ pro.defect_in_rate }}</td>
                   <td>{{ pro.defect_out_rate }}</td>
-                  <td></td>
+                  <td>{{ pro.defect_density }}</td>
                   <td></td>
                   {% endfor %}
                 </tr>

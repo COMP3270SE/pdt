@@ -73,6 +73,10 @@ class Project(models.Model):
     def defect_out_rate(self):
         return round(self.defect_out/self.effort, 2)
 
+    @property
+    def defect_density(self):
+        return float(self.defect_in)/ float(1000*self.SLOC['sum'])
+
 class Phase(models.Model):
     type = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(4)])
     phase_id = models.IntegerField(default=0, primary_key = True)
@@ -122,6 +126,10 @@ class Phase(models.Model):
     def defect_out_rate(self):
         return round(self.defect_out/self.effort, 2)
 
+    @property
+    def defect_density(self):
+        return float(self.defect_in)/ float(1000*self.SLOC['sum'])
+
 class Iteration(models.Model):
     SLOC = models.IntegerField(default=0)
     iteration_id = models.IntegerField(default=0, primary_key = True)
@@ -160,6 +168,10 @@ class Iteration(models.Model):
     @property
     def defect_out_rate(self):
         return round(self.defect_out/self.effort, 2)
+
+    @property
+    def defect_density(self):
+        return float(self.defect_in)/ float(1000*self.SLOC)
 
 class Defect(models.Model):
     did = models.IntegerField(default=0, primary_key=True)
