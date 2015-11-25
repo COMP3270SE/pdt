@@ -34,6 +34,7 @@ class Project(models.Model):
     manager = models.ForeignKey(Manager)
     developer = models.ManyToManyField(Developer)
     est_SLOC = models.IntegerField(default=0)
+    est_escape = models.FloatField(default=0.0)
 
     def __unicode__(self):
         return self.name
@@ -77,6 +78,19 @@ class Project(models.Model):
     def defect_density(self):
         return float(self.defect_in)/ float(1000*self.SLOC['sum'])
 
+    @property
+    def defect_escape(self):
+        iteration_list = Iteration.objects.filter(phase__project = self).order_by('-iteration_id')
+        return iteration_list[0].defect_in * self.est_escape
+
+    @property
+    def defect_yield(self):
+        divider = self.defect_in+self.defect_escape
+        if divider == 0:
+            return "NA"
+        return round(1-self.defect_escape/divider, 2)
+
+
 class Phase(models.Model):
     type = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(4)])
     phase_id = models.IntegerField(default=0, primary_key = True)
@@ -106,6 +120,8 @@ class Phase(models.Model):
 
     @property
     def SLOC_effort(self):
+        if self.effort == 0:
+            return "NA"
         return round(self.SLOC['sum']/self.effort)
 
     @property
@@ -120,15 +136,47 @@ class Phase(models.Model):
 
     @property
     def defect_in_rate(self):
+        if self.effort == 0:
+            return "NA"
         return round(self.defect_in/self.effort, 2)
 
     @property
     def defect_out_rate(self):
+        if self.effort == 0:
+            return "NA"
         return round(self.defect_out/self.effort, 2)
 
     @property
     def defect_density(self):
         return float(self.defect_in)/ float(1000*self.SLOC['sum'])
+
+    @property
+    def defect_in_total(self):
+        phase_list = Phase.objects.filter(project = self.project).filter(phase_id__lte=self.phase_id)
+        total = 0
+        for i in phase_list:
+            total += i.defect_in
+        return total
+
+    @property
+    def defect_out_total(self):
+        phase_list = Phase.objects.filter(project = self.project).filter(phase_id__lt=self.phase_id)
+        total = 0
+        for i in phase_list:
+            total += i.defect_out
+        return total
+
+    @property
+    def defect_yield(self):
+        escape_rate = Project.objects.filter(pid = self.project.pid)[0].est_escape
+        last_phase = Phase.objects.filter(project = self.project).order_by('-phase_id')[0]
+        defect_escape = escape_rate * Defect.objects.filter(in_iteration__phase=self, out_iteration__phase=last_phase).count()
+        pre_defect_out_total = self.defect_out_total
+        divider = defect_escape + self.defect_in_total - pre_defect_out_total
+        if divider == 0:
+            return "NA"
+        return round(self.defect_out/divider, 2)
+
 
 class Iteration(models.Model):
     SLOC = models.IntegerField(default=0)
@@ -151,6 +199,8 @@ class Iteration(models.Model):
 
     @property
     def SLOC_effort(self):
+        if self.effort == 0:
+            return "NA"
         return round(self.SLOC/self.effort, 2)
 
     @property
@@ -163,15 +213,47 @@ class Iteration(models.Model):
 
     @property
     def defect_in_rate(self):
+        if self.effort == 0:
+            return "NA"
         return round(self.defect_in/self.effort, 2)
 
     @property
     def defect_out_rate(self):
+        if self.effort == 0:
+            return "NA"
         return round(self.defect_out/self.effort, 2)
 
     @property
     def defect_density(self):
         return float(self.defect_in)/ float(1000*self.SLOC)
+
+    @property
+    def defect_in_total(self):
+        iteration_list = Iteration.objects.filter(phase__project__exact = self.phase.project).filter(iteration_id__lte=self.iteration_id)
+        total = 0
+        for i in iteration_list:
+            total += i.defect_in
+        return total
+
+    @property
+    def defect_out_total(self):
+        iteration_list = Iteration.objects.filter(phase__project__exact = self.phase.project).filter(iteration_id__lt=self.iteration_id)
+        total = 0
+        for i in iteration_list:
+            total += i.defect_out
+        return total
+
+    @property
+    def defect_yield(self):
+        escape_rate = Project.objects.filter(pid = self.phase.project.pid)[0].est_escape
+        last_iteration = Iteration.objects.filter(phase__project__exact = self.phase.project).order_by('-iteration_id')[0]
+        defect_escape = escape_rate * Defect.objects.filter(in_iteration = self, out_iteration=last_iteration).count()
+        pre_defect_out_total = self.defect_out_total
+        divider = defect_escape + self.defect_in_total - pre_defect_out_total
+        if divider == 0:
+            return "NA"
+        return round(self.defect_out/divider, 2)
+
 
 class Defect(models.Model):
     did = models.IntegerField(default=0, primary_key=True)
