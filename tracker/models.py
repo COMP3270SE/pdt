@@ -49,11 +49,11 @@ class Project(models.Model):
         effort = 0
         for phase in phase_list:
             effort += phase.effort
-        return effort
+        return round(effort, 2)
 
     @property
     def SLOC_effort(self):
-        return self.SLOC['sum']/self.effort
+        return round(self.SLOC['sum']/self.effort, 2)
 
     @property
     def defect_in(self):
@@ -64,6 +64,14 @@ class Project(models.Model):
     def defect_out(self):
         iteration_list = Iteration.objects.filter(phase__project__exact = self)
         return Defect.objects.filter(out_iteration__in = iteration_list).count()
+
+    @property
+    def defect_in_rate(self):
+        return round(self.defect_in/self.effort, 2)
+
+    @property
+    def defect_out_rate(self):
+        return round(self.defect_out/self.effort, 2)
 
 class Phase(models.Model):
     type = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(4)])
@@ -90,11 +98,11 @@ class Phase(models.Model):
         effort = 0
         for iteration in iteration_list:
             effort += iteration.effort
-        return effort
+        return round(effort, 2)
 
     @property
     def SLOC_effort(self):
-        return self.SLOC['sum']/self.effort
+        return round(self.SLOC['sum']/self.effort)
 
     @property
     def defect_in(self):
@@ -105,6 +113,14 @@ class Phase(models.Model):
     def defect_out(self):
         iteration_list = Iteration.objects.filter(phase = self)
         return Defect.objects.filter(out_iteration__in = iteration_list).count()
+
+    @property
+    def defect_in_rate(self):
+        return round(self.defect_in/self.effort, 2)
+
+    @property
+    def defect_out_rate(self):
+        return round(self.defect_out/self.effort, 2)
 
 class Iteration(models.Model):
     SLOC = models.IntegerField(default=0)
@@ -123,11 +139,11 @@ class Iteration(models.Model):
         effort = 0
         for record in record_list:
             effort += record.duration
-        return effort
+        return round(effort, 2)
 
     @property
     def SLOC_effort(self):
-        return self.SLOC/self.effort
+        return round(self.SLOC/self.effort, 2)
 
     @property
     def defect_in(self):
@@ -137,6 +153,13 @@ class Iteration(models.Model):
     def defect_out(self):
         return Defect.objects.filter(out_iteration = self).count()
 
+    @property
+    def defect_in_rate(self):
+        return round(self.defect_in/self.effort, 2)
+
+    @property
+    def defect_out_rate(self):
+        return round(self.defect_out/self.effort, 2)
 
 class Defect(models.Model):
     did = models.IntegerField(default=0, primary_key=True)
@@ -156,8 +179,9 @@ class Workrecord(models.Model):
     developer = models.ForeignKey(Developer)
     iteration = models.ForeignKey(Iteration)
     def __unicode__(self):
-        return self.developer.name+str(self.wid)
+        return str(self.wid)+self.developer.name
     
     @property
     def duration(self):
-        return (self.endtime-self.starttime).days
+        return (self.endtime-self.starttime).total_seconds()/3600
+        #return (self.endtime-self.starttime).days

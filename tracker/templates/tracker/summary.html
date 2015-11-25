@@ -178,8 +178,8 @@
                   <th>Iteration Name</th>
                   <th>Iteration Phase</th>
                   <th>SLOC</th>
-                  <th>Effort (person days)</th>
-                  <th>SLOC (per person days)</th>
+                  <th>Effort (person hour)</th>
+                  <th>SLOC (per person hour)</th>
                 </tr>
               </thead>
               <tbody>
@@ -204,8 +204,8 @@
                 <tr>
                   <th>Phase</th>
                   <th>SLOC</th>
-                  <th>Effort (person days)</th>
-                  <th>SLOC (per person days)</th>
+                  <th>Effort (person hour)</th>
+                  <th>SLOC (per person hour)</th>
                 </tr>
               </thead>
               <tbody>
@@ -228,8 +228,8 @@
               <thead>
                 <tr>
                   <th>SLOC</th>
-                  <th>Effort (person days)</th>
-                  <th>SLOC (per person days)</th>
+                  <th>Effort (person hour)</th>
+                  <th>SLOC (per person hour)</th>
                 </tr>
               </thead>
               <tbody>
@@ -273,8 +273,8 @@
                   <td>{{ iteration.phase }}</td>
                   <td>{{ iteration.defect_in }}</td>
                   <td>{{ iteration.defect_out }}</td>
-                  <td></td>
-                  <td></td>
+                  <td>{{ iteration.defect_in_rate}}</td>
+                  <td>{{ iteration.defect_out_rate}}</td>
                   <td></td>
                   <td></td>
                 </tr>
@@ -304,8 +304,8 @@
                   <td>{{ phase.type }}</td>
                   <td>{{ phase.defect_in }}</td>
                   <td>{{ phase.defect_out }}</td>
-                  <td></td>
-                  <td></td>
+                  <td>{{ phase.defect_in_rate}}</td>
+                  <td>{{ phase.defect_out_rate }}</td>
                   <td></td>
                   <td></td>
                 </tr>
@@ -333,8 +333,8 @@
                   {% for pro in project %}
                   <td>{{ pro.defect_in }}</td>                  
                   <td>{{ pro.defect_out }}</td>
-                  <td></td>
-                  <td></td>
+                  <td>{{ pro.defect_in_rate }}</td>
+                  <td>{{ pro.defect_out_rate }}</td>
                   <td></td>
                   <td></td>
                   {% endfor %}
