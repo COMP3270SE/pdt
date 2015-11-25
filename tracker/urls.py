@@ -25,4 +25,8 @@ urlpatterns = [
     url(r'^(?P<id>[0-9]{8})/timing/$', views.timing, name='timing'),
     # http://localhost:8000/tracker/50000000/project/1/summary/
     url(r'^(?P<user_id>[0-9]{8})/project/(?P<project_id>[0-9]+)/summary/$', views.summary, name='summary'),
+    # http://localhost:8000/tracker/login
+    url(r'^login/$', views.login, name='login'),
+    # http://localhost:8000/tracker/50000000/project/1/people/
+    url(r'^(?P<user_id>[0-9]{8})/project/(?P<project_id>[0-9]+)/people/$', views.people, name='people'),
 ]
