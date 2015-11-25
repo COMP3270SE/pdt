@@ -55,6 +55,15 @@ class Project(models.Model):
     def SLOC_effort(self):
         return self.SLOC['sum']/self.effort
 
+    @property
+    def defect_in(self):
+        iteration_list = Iteration.objects.filter(phase__project__exact = self)
+        return Defect.objects.filter(in_iteration__in = iteration_list).count()
+
+    @property
+    def defect_out(self):
+        iteration_list = Iteration.objects.filter(phase__project__exact = self)
+        return Defect.objects.filter(out_iteration__in = iteration_list).count()
 
 class Phase(models.Model):
     type = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(4)])
@@ -87,6 +96,16 @@ class Phase(models.Model):
     def SLOC_effort(self):
         return self.SLOC['sum']/self.effort
 
+    @property
+    def defect_in(self):
+        iteration_list = Iteration.objects.filter(phase = self)
+        return Defect.objects.filter(in_iteration__in = iteration_list).count()
+
+    @property
+    def defect_out(self):
+        iteration_list = Iteration.objects.filter(phase = self)
+        return Defect.objects.filter(out_iteration__in = iteration_list).count()
+
 class Iteration(models.Model):
     SLOC = models.IntegerField(default=0)
     iteration_id = models.IntegerField(default=0, primary_key = True)
@@ -110,15 +129,25 @@ class Iteration(models.Model):
     def SLOC_effort(self):
         return self.SLOC/self.effort
 
+    @property
+    def defect_in(self):
+        return Defect.objects.filter(in_iteration = self).count()
+
+    @property
+    def defect_out(self):
+        return Defect.objects.filter(out_iteration = self).count()
+
+
 class Defect(models.Model):
     did = models.IntegerField(default=0, primary_key=True)
     type = models.IntegerField(default=0)
     description = models.CharField(max_length=1000)
-    iteration = models.ForeignKey(Iteration)
+    in_iteration = models.ForeignKey(Iteration, related_name='injection', default=1)
+    out_iteration = models.ForeignKey(Iteration, related_name='removal', default=1)
     developer = models.ForeignKey(Developer) 
     
     def __unicode__(self):
-        return str(self.id)+"-"+self.type
+        return str(self.did)+"-"+str(self.type)+": in-"+str(self.in_iteration)+", out-"+str(self.out_iteration)
 
 class Workrecord(models.Model):
     wid = models.IntegerField(default=0, primary_key=True)

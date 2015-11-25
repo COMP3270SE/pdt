@@ -47,8 +47,6 @@ def summary(request, user_id, project_id):
 			'project': project, 
 			'iteration_list': iteration_list,
 			'phase_list': phase_list
-			#'phase_zip': phase_zip,
-			#'project_SLOC': project_SLOC
 			})
 
 def timing(request, id):

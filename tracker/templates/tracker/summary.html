@@ -247,6 +247,102 @@
           </div>
 
 
+        </br></br><hr>
+        <!-- ======= Metrics 2 ======= -->
+        <h2 class="sub-header"> >>> Metrics 2</h2>
+          <div class="table-responsive">
+            <h3>Iteration</h3>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Iteration Name</th>
+                  <th>Iteration Phase</th>
+                  <th>Defects Injected</th>
+                  <th>Defects Removed</th>
+                  <th>Injection Rate (per person-hour)</th>
+                  <th>Removal Rate (per person-hour)</th>
+                  <th>Defect Density (per KSLC)<th>
+                  <th>Yield</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- n iterations -->              
+                {% for iteration in iteration_list %}
+                <tr>
+                  <td>{{ iteration.name }}</td>
+                  <td>{{ iteration.phase }}</td>
+                  <td>{{ iteration.defect_in }}</td>
+                  <td>{{ iteration.defect_out }}</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+          <div class="table-responsive">
+            <h3>Phase</h3>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Phase</th>
+                  <th>Defects Injected</th>
+                  <th>Defects Removed</th>
+                  <th>Injection Rate (per person-hour)</th>
+                  <th>Removal Rate (per person-hour)</th>
+                  <th>Defect Density (per KSLC)<th>
+                  <th>Yield</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- 4 phases -->
+                {% for phase in phase_list %}
+                <tr>
+                  <td>{{ phase.type }}</td>
+                  <td>{{ phase.defect_in }}</td>
+                  <td>{{ phase.defect_out }}</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+          <div class="table-responsive">
+            <h3>Project</h3>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Defects Injected</th>
+                  <th>Defects Removed</th>
+                  <th>Injection Rate (per person-hour)</th>
+                  <th>Removal Rate (per person-hour)</th>
+                  <th>Defect Density (per KSLC)<th>
+                  <th>Yield</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- 1 project -->
+                <tr>
+                  {% for pro in project %}
+                  <td>{{ pro.defect_in }}</td>                  
+                  <td>{{ pro.defect_out }}</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  {% endfor %}
+                </tr>
+                
+              </tbody>
+            </table>
+          </div>
 
         </div>
       </div>
