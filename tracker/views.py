@@ -60,7 +60,7 @@ def timing(request, id):
 def people(request, user_id, project_id):
 	return render(request, 'tracker/people.html', {})
 
-def login_user(request):
+"""def login_user(request):
     state = "Please log in below..."
     username = password = ''
     if request.POST:
@@ -79,4 +79,4 @@ def login_user(request):
 
     return render_to_response('tracker/login.html',{'state':state, 'username': username})
 
-
+"""
