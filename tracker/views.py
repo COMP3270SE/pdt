@@ -9,6 +9,8 @@ from .models import Project, Developer, Manager
 from .models import Phase, Iteration, Defect
 from .models import Workrecord
 
+from django import forms
+from django.http import HttpResponseRedirect
 import datetime
 
 # Each view function takes at least one parameter, called request
@@ -79,4 +81,17 @@ def login_user(request):
 
     return render_to_response('tracker/login.html',{'state':state, 'username': username})
 
+class DefectForm(forms.ModelForm):
+    class Meta:
+        model = Defect
+        fields = ['did', 'type', 'description', 'in_iteration', 'out_iteration', 'developer']
+    
+def reportDefect(request, id):
+    if request.method == 'POST':
+        form = DefectForm(request.POST)
+        if form.is_valid():
+            new_defect = form.save()
+            return HttpResponseRedirect('/Defect/' + str(new_defect.pk))
 
+    form = DefectForm()
+    return render(request, 'tracker/reportdefect.html', {'form': form})
