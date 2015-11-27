@@ -9,6 +9,8 @@ from .models import Project, Developer, Manager
 from .models import Phase, Iteration, Defect
 from .models import Workrecord
 
+from django import forms
+from django.http import HttpResponseRedirect
 import datetime
 
 # Each view function takes at least one parameter, called request
@@ -60,23 +62,17 @@ def timing(request, id):
 def people(request, user_id, project_id):
 	return render(request, 'tracker/people.html', {})
 
-"""def login_user(request):
-    state = "Please log in below..."
-    username = password = ''
-    if request.POST:
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+class DefectForm(forms.ModelForm):
+    class Meta:
+        model = Defect
+        fields = ['did', 'type', 'description', 'in_iteration', 'out_iteration', 'developer']
+    
+def reportDefect(request, id):
+    if request.method == 'POST':
+        form = DefectForm(request.POST)
+        if form.is_valid():
+            new_defect = form.save()
+            return HttpResponseRedirect('/Defect/' + str(new_defect.pk))
 
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                state = "You're successfully logged in!"
-            else:
-                state = "Your account is not active, please contact the site admin."
-        else:
-            state = "Your username and/or password were incorrect."
-
-    return render_to_response('tracker/login.html',{'state':state, 'username': username})
-
-"""
+    form = DefectForm()
+    return render(request, 'tracker/reportdefect.html', {'form': form})
