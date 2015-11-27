@@ -120,14 +120,6 @@
         display: inline-block;
         border-radius: 50%;
       }
-      button:before {
-        font-family: 'entypo', sans-serif;
-        color: white;
-        position: absolute;
-        : px;
-        font-size: 2em;
-        top: 25%;
-        z-index: 10;}
     </style>
 
   </head>
@@ -149,9 +141,9 @@
           <ul class="nav navbar-nav navbar-right">
             <li><a href="#">Home</a></li>
             
-          {% if user %}  
-          <li><a href="/tracker/{{ person.uid }}/home">{{ user.name }}</a></li>
-          {% endif %}
+          {% for person in user %}  
+          <li><a href="/tracker/{{ person.uid }}/home">{{ person.name }}</a></li>
+          {% endfor %}
             
             <li><a href="#">Logout</a></li>
           </ul>
@@ -159,49 +151,33 @@
       </div>
     </nav>
 
-
     <div class="container-fluid">
       <div class="row">
-
         <div class="col-sm-3 col-md-2 sidebar">
-          <ul class="nav nav-sidebar">
-          </ul>
-        </div>
-
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-        <div class="page-header">
-        <h1>Project List</h1>
-        </div>
-        <div class="row">
-          <div class="col-sm-4">
-            {% if isManager %}
-            <!-- Manager can create project -->
-            <div class="list-group" style="border-style: dashed; text-align: center; color = blue;">
-              <a href="/tracker/{{ project.manager.uid }}/project/{{ project.pid }}" class="list-group-item">
-                <h3 class="list-group-item-heading">Create New Project</h4>
-                <h1>+</h1>
-              </a>
-            </div>
-            {% endif %}
+          <!--<ul class="nav nav-sidebar">
+            <li><a href="#">UP</a></li>
+            <li><a href="#">People</a></li>
+            <li class="active"><a href="#">Summary</a></li>
+          </ul>-->
 
 
+          <div class="row placeholders">
             {% for project in project_list %}
-            <div class="list-group">
-              <a href="/tracker/{{ project.manager.uid }}/project/{{ project.pid }}" class="list-group-item">
-                <h3 class="list-group-item-heading">{{ project.name }}</h3></br>
-                <p class="list-group-item-text">{{ project.description }}</p>
-                <p class="list-group-item-text" ><b>Project Manager: {{ project.manager.name }}</b></p>
-              </a>
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <img data-src="holder.js/200x200/auto/sky" class="img-responsive" alt="Generic placeholder thumbnail">
+              {% for person in user %}
+              <h4><a href="/tracker/{{ person.uid }}/project/{{ project.pid }}/UP">{{ project.name }}</a></h4>              
+              <span class="text-muted">{{ project.description }}</span>
+              {% endif %}
             </div>
             {% endfor %}
+            </div>
           </div>
-        </div>
-        </div>
+        
 
+        </div>
       </div>
     </div>
-
-
 
     <!-- Bootstrap core JavaScript
     ================================================== -->

@@ -12,15 +12,17 @@
 # tracker/100000000/project/1/manage_mode.html
 # tracker/100000000/project/1/report.html
 
-from django.conf.urls import url
+from django.conf.urls import patterns, include, url
+from django.conf.urls.static import static
+from django.contrib import admin
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.conf import settings
 
 from . import views
 
 urlpatterns = [
-    # ex: /tracker/
-    url(r'^$', views.index, name='index'),
     # http://localhost:8000/tracker/50000000/home/
-    url(r'^(?P<id>[0-9]{8})/home/$', views.home, name='home'),
+    url(r'^(?P<user_id>[0-9]{8})/home/$', views.home, name='home'),
     # http://localhost:8000/tracker/50000000/timing/
     url(r'^(?P<id>[0-9]{8})/timing/$', views.timing, name='timing'),
     # http://localhost:8000/tracker/50000000/reportdefect/
@@ -31,4 +33,8 @@ urlpatterns = [
     url(r'^login/$', views.login, name='login'),
     # http://localhost:8000/tracker/50000000/project/1/people/
     url(r'^(?P<user_id>[0-9]{8})/project/(?P<project_id>[0-9]+)/people/$', views.people, name='people'),
-]
+    # http://localhost:8000/tracker/50000000/project/1/
+    url(r'^(?P<user_id>[0-9]{8})/project/(?P<project_id>[0-9]+)/$', views.index, name='index'),
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+urlpatterns += staticfiles_urlpatterns()

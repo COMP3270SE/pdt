@@ -14,9 +14,10 @@ from django.http import HttpResponseRedirect
 import datetime
 
 # Each view function takes at least one parameter, called request
-def index(request):
-    project_list = Project.objects.order_by('-pid')
-    context = {'project_list': project_list}
+def index(request, project_id):
+    phase_list = Phase.objects.filter(project__pid = project_id).order_by('phase_id')
+    iteration_list = Iteration.objects.filter(phase__in = phase_list).order_by('iteration_id')
+    context = {'phase_list': project_list, 'iteration_list': iteration_list}
     return render(request, 'tracker/index.html', context)
     #template = loader.get_template('tracker/index.html')
     #context = RequestContext(request, {
@@ -24,19 +25,29 @@ def index(request):
     #})
     #return HttpResponse(template.render(context))
     
-def home(request, id):
-	if id < 50000000:
+def home(request, user_id):
+	if user_id < 50000000:
 		try:
-			developer = get_object_or_404(Developer, uid=id)
+			user = get_object_or_404(Developer, uid = user_id)
+			project_list = Project.objects.filter(developer__uid = user_id)
 		except Developer.DoesNotExist:
 			raise Http404("Developer does not exist")
-		return render(request, 'tracker/home.html', {'user': developer})
+		return render(request, 'tracker/home.html', {
+			'user': user,
+			'project_list': project_list,
+			'isManager': False
+			})
 	else:
 		try:
-			manager = get_object_or_404(Manager, uid=id)
+			user = get_object_or_404(Manager, uid = user_id)
+			project_list = Project.objects.filter(manager__uid = user_id)
 		except Manager.DoesNotExist:
 			raise Http404("Manager does not exist")
-		return render(request, 'tracker/home.html', {'user': manager})
+		return render(request, 'tracker/home.html', {
+			'user': user,
+			'project_list': project_list,
+			'isManager': True
+			})
 
 def summary(request, user_id, project_id):
 	if user_id < 50000000:
