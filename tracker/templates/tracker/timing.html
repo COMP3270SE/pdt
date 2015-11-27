@@ -131,10 +131,14 @@
 	<button type='button' class="btn btn-info" onclick='r()' onfocus='this.blur()'>Reset</button>
 </div>
     <br><br><br>
-    <table class="table" >
-    	<tr><th>Lap #</th><th>This Lap</th><th>Running Total</th></tr>
-    	<tbody id='lap'></tbody>
-    </table>
+    <form name="records" method="post">
+        <table class="table" >
+        	<tr><th>Lap #</th><th>This Lap</th><th>Running Total</th></tr>
+        	<tbody id='lap'></tbody>
+        </table>
+        <input type="hidden" name="name" value="your value"/>
+        <button type='button' class="btn btn-info" type="submit">Save</button>
+    </form>
 
 <script type="text/javascript">
 var _gaq = _gaq || [];

@@ -68,7 +68,7 @@ def summary(request, user_id, project_id):
 def timing(request, id):
 	return render(request,
                   'tracker/timing.html',
-                  {'user': developer})
+                  {})
 
 def people(request, user_id, project_id):
 	return render(request, 'tracker/people.html', {})
@@ -83,7 +83,11 @@ def reportDefect(request, id):
         form = DefectForm(request.POST)
         if form.is_valid():
             new_defect = form.save()
-            return HttpResponseRedirect('/Defect/' + str(new_defect.pk))
+            return HttpResponseRedirect('/tracker/Defect/' + str(new_defect.pk))
 
     form = DefectForm()
     return render(request, 'tracker/reportdefect.html', {'form': form})
+
+def showDefect(request, defect_id):
+	return render(request, 'tracker/showdefect.html', {})
+

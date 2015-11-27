@@ -23,6 +23,8 @@ from . import views
 urlpatterns = [
     # http://localhost:8000/tracker/50000000/home/
     url(r'^(?P<user_id>[0-9]{8})/home/$', views.home, name='home'),
+    # http://localhost:8000/tracker/Defect/50000000/home/
+    url(r'^Defect/(?P<defect_id>[0-9]+)/$', views.showDefect, name='showdefect'),
     # http://localhost:8000/tracker/50000000/timing/
     url(r'^(?P<id>[0-9]{8})/timing/$', views.timing, name='timing'),
     # http://localhost:8000/tracker/50000000/reportdefect/
