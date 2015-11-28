@@ -132,9 +132,12 @@ def timing(request, id):
 
 def people(request, user_id, project_id):
 	project = get_object_or_404(Project, pk = project_id)
+	user = get_object_or_404(Manager, pk = user_id)
 	developer_list = project.developer.all()
 	return render(request, 'tracker/people.html', {
-		'developer_list': developer_list
+		'developer_list': developer_list,
+		'user': user,
+		'project': project
 		})
 
 class DefectForm(forms.ModelForm):

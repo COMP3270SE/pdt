@@ -170,8 +170,8 @@
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
             <li class="active"><a href="#">UP</a></li>
-            <li><a href="#">People</a></li>
             {% if project %}
+            <li><a href="/tracker/{{ project.manager.pk }}/project/{{ project.pk }}/people">People</a></li>
             <li><a href="/tracker/{{ project.manager.pk }}/project/{{ project.pk }}/summary">Summary</a></li>
             {% endif %}
           </ul>

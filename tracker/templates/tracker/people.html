@@ -144,10 +144,10 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            {% if manager %}  
-            <li><a href="/tracker/{{ manager.pk }}/home">Home</a></li>
+            {% if user %}  
+            <li><a href="/tracker/{{ user.pk }}/home">Home</a></li>
+            <li><a href="#">{{ user.name }}</a></li>
             {% endif %}
-            <li><a href="#">{{ manager.name }}</a></li>
             <li><a href="#">Logout</a></li>
           </ul>
         </div>
@@ -161,8 +161,10 @@
             {% if project %}
             <li><a href="/tracker/{{ project.manager.pk }}/project/{{ project.pk}}">UP</a></li>
             {% endif %}
-            <li><a href="#">People</a></li>
-            <li class="active"><a href="#">Summary</a></li>
+            <li class="active"><a href="#">People</a></li>
+            {% if project %}
+            <li><a href="/tracker/{{ project.manager.pk }}/project/{{ project.pk }}/summary">Summary</a></li>
+            {% endif %}
           </ul>
         </div>
 
