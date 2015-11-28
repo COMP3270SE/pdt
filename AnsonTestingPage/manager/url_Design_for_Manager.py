@@ -8,7 +8,7 @@
 # /login/
 
 # Arrived Manager Home
-# /(uid)/home/
+# /(uid)/manHome/
 
 # We have two links out
 # First, Create a new project
@@ -26,8 +26,8 @@
 # Second - b, Show Developer List
 # (uid)/(pid)/developerList/
 
-# Second - c, Show Summary
-# (uid)/(pid)/summary/
+# Second - c, Show Summary (for manager)
+# (uid)/(pid)/manSummary/
 
 # logout 
 # /logout/
