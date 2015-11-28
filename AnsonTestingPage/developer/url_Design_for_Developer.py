@@ -1,21 +1,25 @@
 # URL design
 
-# For manager
+# For Developer
 
 # Assumed that every dead-end web page, we have at least a botton to go home And logout
 
-# login with a manager account
+# login with a developer account
 # /login/
 
-# Arrived Manager Home
-# /(uid)/home/
+# Arrived Developer Home
+# /(uid)/deveHome/
 
-# We have two links out
-# First, Create a new project
-# /(uid)/createProject/
+# Choose the project (We have to get the current iteration information)
+# /(uid)/(pid)/
 
-# First － a, Create a new project
-# /(uid)/projectSaved/
+# We have three links out
+
+# First, click the timer ( Start to work )
+# /(uid)/timer
+
+# First, click the timer ( Start to work )
+# /(uid)/timer
 
 # Second, Choose a existed project
 # (uid)/(pid)/
