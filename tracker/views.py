@@ -15,8 +15,8 @@ import datetime
 
 # Each view function takes at least one parameter, called request
 def index(request, project_id):
-    phase_list = Phase.objects.filter(project__pid = project_id).order_by('phase_id')
-    iteration_list = Iteration.objects.filter(phase__in = phase_list).order_by('iteration_id')
+    phase_list = Phase.objects.filter(project__pk = project_id).order_by('pk')
+    iteration_list = Iteration.objects.filter(phase__in = phase_list).order_by('pk')
     context = {'phase_list': project_list, 'iteration_list': iteration_list}
     return render(request, 'tracker/index.html', context)
     #template = loader.get_template('tracker/index.html')
@@ -28,8 +28,8 @@ def index(request, project_id):
 def home(request, user_id):
 	if user_id < 50000000:
 		try:
-			user = get_object_or_404(Developer, uid = user_id)
-			project_list = Project.objects.filter(developer__uid = user_id)
+			user = get_object_or_404(Developer, pk = user_id)
+			project_list = Project.objects.filter(developer__pk = user_id)
 		except Developer.DoesNotExist:
 			raise Http404("Developer does not exist")
 		return render(request, 'tracker/home.html', {
@@ -39,8 +39,8 @@ def home(request, user_id):
 			})
 	else:
 		try:
-			user = get_object_or_404(Manager, uid = user_id)
-			project_list = Project.objects.filter(manager__uid = user_id)
+			user = get_object_or_404(Manager, pk = user_id)
+			project_list = Project.objects.filter(manager__pk = user_id)
 		except Manager.DoesNotExist:
 			raise Http404("Manager does not exist")
 		return render(request, 'tracker/home.html', {
@@ -49,13 +49,28 @@ def home(request, user_id):
 			'isManager': True
 			})
 
+class ProjectForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = ['name', 'description', 'manager', 'developer', 'est_SLOC', 'est_escape']
+    
+def createproject(request, user_id):
+    if request.method == 'POST':
+        form = ProjectForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/tracker/'+user_id+'/home/')
+
+    form = ProjectForm()
+    return render(request, 'tracker/createproject.html', {'form': form})
+
 def summary(request, user_id, project_id):
 	if user_id < 50000000:
 		raise Http404("You don't have permission to this file")
 	else:
-		manager = Manager.objects.filter(uid = user_id)
-		project = Project.objects.filter(pid = project_id)
-		phase_list = Phase.objects.filter(project__pid = project_id)
+		manager = Manager.objects.filter(pk = user_id)
+		project = Project.objects.filter(pk = project_id)
+		phase_list = Phase.objects.filter(project__pk = project_id)
 		iteration_list = Iteration.objects.filter(phase__in = phase_list)
 
 		return render(request, 'tracker/summary.html', {
@@ -76,7 +91,7 @@ def people(request, user_id, project_id):
 class DefectForm(forms.ModelForm):
     class Meta:
         model = Defect
-        fields = ['did', 'type', 'description', 'in_iteration', 'out_iteration', 'developer']
+        fields = ['type', 'description', 'in_iteration', 'out_iteration', 'developer']
     
 def reportDefect(request, id):
     if request.method == 'POST':

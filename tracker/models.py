@@ -28,7 +28,7 @@ class Developer(models.Model):
         return self.name
 
 class Project(models.Model):
-    pid = models.IntegerField(default=0, primary_key=True)
+    pid = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=200)
     manager = models.ForeignKey(Manager)
@@ -93,7 +93,7 @@ class Project(models.Model):
 
 class Phase(models.Model):
     type = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(4)])
-    phase_id = models.IntegerField(default=0, primary_key = True)
+    phase_id = models.AutoField(primary_key = True)
     project = models.ForeignKey(Project)
 
     def __unicode__(self):
@@ -180,7 +180,7 @@ class Phase(models.Model):
 
 class Iteration(models.Model):
     SLOC = models.IntegerField(default=0)
-    iteration_id = models.IntegerField(default=0, primary_key = True)
+    iteration_id = models.AutoField(primary_key = True)
     time_length = models.IntegerField(default=0)
     status = models.IntegerField(default=0)
     name = models.CharField(max_length=100)
