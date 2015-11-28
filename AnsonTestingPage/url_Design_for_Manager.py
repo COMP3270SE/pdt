@@ -7,7 +7,7 @@
 # login with a manager account
 # /login/
 
-# Arrived Home
+# Arrived Manager Home
 # /(uid)/home/
 
 # We have two links out
