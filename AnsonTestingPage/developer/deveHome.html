@@ -164,17 +164,20 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
             <li><a href="#">Home</a></li>
-            
-          {% for man in manager %}  
-          <li><a href="/tracker/{{ manager.uid }}/home">{{ man.name }}</a></li>
-          {% endfor %}
+
+            <!-- Anson words : it should change from manager to developer -->
+
+
+          <!-- {% for man in manager %}   -->
+          <li><a href="/tracker/{{ manager.uid }}/home">Name of the developer</a></li>
+          <!-- {% endfor %} -->
             
             <!-- <li><a href="#">Logout</a></li> -->
             <!-- <li><button type="button" class="btn btn-primary btn-lg">logout</button></li> -->
 
             <!-- Trigger the modal with a button -->
             <!-- Anson added this new button-->
-            <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Logout</button>
+            <li><button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Logout</button></li>
             
           </ul>
         </div>
@@ -195,13 +198,13 @@
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
           <h1 class="page-header">Home</h1>
 
+          <!-- As a developer, they can only choose existed projects -->
+
           <button type="button" class="btn btn-primary btn-lg">Project 1</button>
           <div class="divider"/></div>
           <button type="button" class="btn btn-primary btn-lg">Project 2</button>
           <div class="divider"/></div>
           <button type="button" class="btn btn-primary btn-lg">Project 3</button>
-          <div class="divider"/></div>
-          <button type="button" class="btn btn-primary btn-lg">New</button>
 
               <!-- Modal -->
               <div id="myModal" class="modal fade" role="dialog">
