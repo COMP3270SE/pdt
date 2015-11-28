@@ -16,22 +16,20 @@
 # We have three links out
 
 # First, click the timer ( Start to work )
-# /(uid)/timer
+# /(uid)/(pid)/timer/
 
-# First, click the timer ( Start to work )
-# /(uid)/timer
+# First - a, submit the timing 
+# (In this page we can start, pause, submit)( only submit pass the data to Database)
+# /(uid)/(pid)/timingSaved/
 
-# Second, Choose a existed project
-# (uid)/(pid)/
+# Second, report a defect
+# (uid)/(pid)/defectReport/
 
-# Second - a, Show iteration status
-# (uid)/(pid)/iterationStatus/
+# Second - a, submit a defect report
+# (uid)/(pid)/defectReportSaved/
 
-# Second - b, Show Developer List
-# (uid)/(pid)/developerList/
-
-# Second - c, Show Summary
-# (uid)/(pid)/summary/
+# Third, show the summary (for developer)
+# (uid)/(pid)/deveSummary/
 
 # logout 
 # /logout/
