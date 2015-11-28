@@ -138,18 +138,16 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          {% for pro in project %}
-          <a class="navbar-brand" href="#">{{ pro.name }}</a>
-          {% endfor %}
+          {% if project %}
+          <a class="navbar-brand" href="#">{{ project.name }}</a>
+          {% endif %}
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Home</a></li>
-            
-		    	{% for man in manager %}  
-    			<li><a href="/tracker/{{ manager.uid }}/home">{{ man.name }}</a></li>
-    			{% endfor %}
-            
+            {% if manager %}  
+            <li><a href="/tracker/{{ manager.pk }}/home">Home</a></li>
+            {% endif %}
+    			  <li><a href="#">{{ manager.name }}</a></li>
             <li><a href="#">Logout</a></li>
           </ul>
         </div>
@@ -160,7 +158,9 @@
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li><a href="#">UP</a></li>
+            {% if project %}
+            <li><a href="/tracker/{{ project.manager.pk }}/project/{{ project.pk}}">UP</a></li>
+            {% endif %}
             <li><a href="#">People</a></li>
             <li class="active"><a href="#">Summary</a></li>
           </ul>
@@ -235,11 +235,11 @@
               <tbody>
                 <!-- 1 project -->
                 <tr>
-                  {% for pro in project %}
+                  {% if project %}
                   <td>{{ pro.SLOC.sum }}</td>                  
                   <td>{{ pro.effort }}</td>
                   <td>{{ pro.SLOC_effort }}</td>
-                  {% endfor %}
+                  {% endif %}
                 </tr>
                 
               </tbody>
@@ -330,14 +330,14 @@
               <tbody>
                 <!-- 1 project -->
                 <tr>
-                  {% for pro in project %}
-                  <td>{{ pro.defect_in }}</td>                  
-                  <td>{{ pro.defect_out }}</td>
-                  <td>{{ pro.defect_in_rate }}</td>
-                  <td>{{ pro.defect_out_rate }}</td>
-                  <td>{{ pro.defect_density }}</td>
-                  <td>{{ pro.defect_yield }}</td>
-                  {% endfor %}
+                  {% if project %}
+                  <td>{{ project.defect_in }}</td>                  
+                  <td>{{ project.defect_out }}</td>
+                  <td>{{ project.defect_in_rate }}</td>
+                  <td>{{ project.defect_out_rate }}</td>
+                  <td>{{ project.defect_density }}</td>
+                  <td>{{ project.defect_yield }}</td>
+                  {% endif %}
                 </tr>
                 
               </tbody>

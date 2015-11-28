@@ -54,7 +54,10 @@ class Project(models.Model):
 
     @property
     def SLOC_effort(self):
-        return round(self.SLOC['sum']/self.effort, 2)
+        divider = self.effort
+        if divider == 0:
+            return "NA"
+        return round(self.SLOC['sum']/divider, 2)
 
     @property
     def defect_in(self):
@@ -68,11 +71,17 @@ class Project(models.Model):
 
     @property
     def defect_in_rate(self):
-        return round(self.defect_in/self.effort, 2)
+        divider = self.effort
+        if divider == 0:
+            return "NA"
+        return round(self.defect_in/divider, 2)
 
     @property
     def defect_out_rate(self):
-        return round(self.defect_out/self.effort, 2)
+        divider = self.effort
+        if divider == 0:
+            return "NA"
+        return round(self.defect_out/divider, 2)
 
     @property
     def defect_density(self):
@@ -148,7 +157,10 @@ class Phase(models.Model):
 
     @property
     def defect_density(self):
-        return float(self.defect_in)/ float(1000*self.SLOC['sum'])
+        divider = float(1000*self.SLOC['sum'])
+        if divider == 0:
+            return "NA"
+        return float(self.defect_in)/ divider
 
     @property
     def defect_in_total(self):

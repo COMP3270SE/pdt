@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404, render, render_to_response
 from django.db.models import Aggregate
 from django.db.models import Count, Sum
+from django.db.models import Q
 
 from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, login
@@ -55,21 +56,65 @@ class ProjectForm(forms.ModelForm):
         fields = ['name', 'description', 'manager', 'developer', 'est_SLOC', 'est_escape']
     
 def createproject(request, user_id):
-    if request.method == 'POST':
-        form = ProjectForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('/tracker/'+user_id+'/home/')
+	if request.method == 'POST':
+		form = ProjectForm(request.POST)
+		if form.is_valid():
+			form.save()
+			return HttpResponseRedirect('/tracker/'+user_id+'/home/')
 
-    form = ProjectForm()
-    return render(request, 'tracker/createproject.html', {'form': form})
+	form = ProjectForm()
+	user = get_object_or_404(Manager, pk = user_id)
+	return render(request, 'tracker/createproject.html', {
+    	'form': form,
+    	'user': user
+    	})
+
+def viewproject(request, user_id, project_id):
+	user = get_object_or_404(Manager, pk = user_id)
+	project = get_object_or_404(Project, pk = project_id)
+	phase_list = Phase.objects.filter(project__pk = project_id).order_by('type')
+	iteration_list = Iteration.objects.filter(phase__in = phase_list).order_by('pk')
+	active_iteration = get_object_or_404(Iteration, status = 1)
+	if Iteration.objects.filter(~Q(status=0)).count() > 0:
+		is_opened_iteration = True
+	else:
+		is_opened_iteration = False
+
+	return render(request, 'tracker/project_index.html', {
+		'user': user,
+		'phase_list': phase_list,
+		'iteration_list': iteration_list,
+		'project': project,
+		'active_iteration': active_iteration,
+		'is_opened_iteration': is_opened_iteration
+		})
+
+class IterationForm(forms.ModelForm):
+	class Meta:
+		model = Iteration
+		fields = ['iteration_id', 'status']
+
+def changeItState(request, user_id, project_id, iteration_id):
+	if request.method == 'POST':
+		it_form = IterationForm(request.POST)
+
+	if it_form.is_valid():
+		iteration = Iteration.objects.get(pk=iteration_id)
+		it_form = IterationForm(request.POST, instance = iteration)
+		it_form.save()
+		return HttpResponseRedirect('/tracker/'+user_id+'/project/'+project_id)
+	else:
+		iteration = Iteration.objects.get(pk = iteration_id)       
+		it_form = Iteration(instance=iteration)
+
+        return render_to_response('tracker/project_index.html',{'form':it_form}, context_instance=RequestContext(request))
 
 def summary(request, user_id, project_id):
 	if user_id < 50000000:
 		raise Http404("You don't have permission to this file")
 	else:
-		manager = Manager.objects.filter(pk = user_id)
-		project = Project.objects.filter(pk = project_id)
+		manager = get_object_or_404(Manager, pk = user_id)
+		project = get_object_or_404(Project, pk = project_id)
 		phase_list = Phase.objects.filter(project__pk = project_id)
 		iteration_list = Iteration.objects.filter(phase__in = phase_list)
 
@@ -86,7 +131,11 @@ def timing(request, id):
                   {})
 
 def people(request, user_id, project_id):
-	return render(request, 'tracker/people.html', {})
+	project = get_object_or_404(Project, pk = project_id)
+	developer_list = project.developer.all()
+	return render(request, 'tracker/people.html', {
+		'developer_list': developer_list
+		})
 
 class DefectForm(forms.ModelForm):
     class Meta:
