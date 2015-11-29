@@ -4,13 +4,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="../../favicon.ico">
-
-
-    <!-- newly added -->
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 
     <title>Project Data Tracker</title>
 
@@ -23,14 +16,9 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
 
-
-    <!-- Anson newly Added script -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-
       <!-- Custom styles for this template -->
-    {% load staticfiles %}
-    <!--<link rel="stylesheet" type="text/css" href="{% static 'tracker/dashboard.css' %}" />-->
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'dashboard.css' %}" />
 
     <style>
       /*
@@ -132,14 +120,14 @@
         display: inline-block;
         border-radius: 50%;
       }
-
-      /*Anson added*/
-      .divider{
-      width:10px;
-      height:auto;
-      display:inline-block;
-      }
-
+      button:before {
+        font-family: 'entypo', sans-serif;
+        color: white;
+        position: absolute;
+        : px;
+        font-size: 2em;
+        top: 25%;
+        z-index: 10;}
     </style>
 
   </head>
@@ -155,83 +143,74 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          {% for pro in project %}
-          <a class="navbar-brand" href="#">{{ pro.name }}</a>
-          {% endfor %}
+          <a class="navbar-brand" href="#">Home</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Home</a></li>
+          <ul class="nav navbar-nav navbar-right">            
+          {% if user %}  
+          <li><a href="/tracker/{{ user.pk }}/home">{{ user.account.username }}</a></li>
+          {% endif %}
             
-          <!-- {% for man in manager %}   -->
-          <!-- Anson remarks: change to show developers name  -->
-          <li><a href="/tracker/{{ manager.account.pk }}/home"> Developers name</a></li>
-          <!-- {% endfor %} -->
-            
-            <!-- <li><a href="#">Logout</a></li> -->
-            <!-- <li><button type="button" class="btn btn-primary btn-lg">logout</button></li> -->
-
-            <!-- Trigger the modal with a button -->
-            <!-- Anson added this new button-->
-            <li><button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Logout</button></li>
-            
+            <li><a href="#">Logout</a></li>
           </ul>
         </div>
       </div>
     </nav>
 
+
     <div class="container-fluid">
       <div class="row">
+
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li><a href="#">Timer</a></li>
-            <li class="active"><a href="#">Report Defect</a></li> 
-            <li><a href="#">Project Summary</a></li>
           </ul>
-
         </div>
+
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-        <center><h1 class="page-header">Report Defect</h1></center>
-
-      <center>
-          <form action="." method="POST">
-            {% csrf_token %}
-            {{ form.as_p }} 
-
-          <input type="submit" value="Summit" />
-          </form>
-      </center>
-
-              <!-- Modal -->
-              <div id="myModal" class="modal fade" role="dialog">
-                <div class="modal-dialog">
-
-                  <!-- Modal content-->
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal">&times;</button>
-                      <h4 class="modal-title">Warm reminding</h4>
-                    </div>
-                    <div class="modal-body">
-                      <p>Are you sure to logout?</p>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-
-          <div class="table-responsive">
-
-
-          </div>
-
+        <div class="page-header">
+        <h1>Project List</h1>
         </div>
+        <div class="row">
+          <div class="col-sm-4">
+            {% if isManager %}
+            <!-- Manager can create project -->
+            <div class="list-group" style="border-style: dashed; text-align: center; color = blue;">
+              {% if user %}
+              <a href="/tracker/{{ user.account.pk }}/createproject" class="list-group-item">
+                {% endif %}
+                <h3 class="list-group-item-heading">Create New Project</h4>
+                <h1>+</h1>
+              </a>
+            </div>
+            {% endif %}
+
+
+            {% for project in project_list %}
+            <div class="list-group">
+              <a href="/tracker/{{ project.manager.uid }}/project/{{ project.pid }}" class="list-group-item">
+                <h3 class="list-group-item-heading">{{ project.name }}</h3></br>
+                <p class="list-group-item-text">{{ project.description }}</p>
+                <p class="list-group-item-text" ><b>Project Manager: {{ project.manager.account.username }}</b></p>
+              </a>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        </div>
+
       </div>
     </div>
 
 
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!--<script src="{% static 'dist/js/bootstrap.min.js' %}"></script>-->
+    <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
+    <!--<script src="{% static 'assets/js/vendor/holder.min.js' %}"></script>-->
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <!--<script src="{% static 'assets/js/ie10-viewport-bug-workaround.js' %}"></script>-->
   </body>
 </html>

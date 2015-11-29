@@ -95,8 +95,9 @@ def createproject(request, user_id):
     	'user': user
     	})
 
+@login_required
 def viewproject(request, user_id, project_id):
-	user = get_object_or_404(Manager, pk = user_id)
+	user = get_object_or_404(Manager, account__pk = user_id)
 	project = get_object_or_404(Project, pk = project_id)
 	phase_list = Phase.objects.filter(project__pk = project_id).order_by('type')
 	iteration_list = Iteration.objects.filter(phase__in = phase_list).order_by('pk')
@@ -135,11 +136,12 @@ def changeItState(request, user_id, project_id, iteration_id):
 
         return render_to_response('tracker/project_index.html',{'form':it_form}, context_instance=RequestContext(request))
 
+@login_required
 def summary(request, user_id, project_id):
 	if user_id < 50000000:
 		raise Http404("You don't have permission to this file")
 	else:
-		manager = get_object_or_404(Manager, pk = user_id)
+		manager = get_object_or_404(Manager, account__pk = user_id)
 		project = get_object_or_404(Project, pk = project_id)
 		phase_list = Phase.objects.filter(project__pk = project_id)
 		iteration_list = Iteration.objects.filter(phase__in = phase_list)
@@ -155,10 +157,10 @@ def timing(request, id):
 	return render(request,
                   'tracker/timing.html',
                   {})
-
+@login_required
 def people(request, user_id, project_id):
 	project = get_object_or_404(Project, pk = project_id)
-	user = get_object_or_404(Manager, pk = user_id)
+	user = get_object_or_404(Manager, account__pk = user_id)
 	developer_list = project.developer.all()
 	return render(request, 'tracker/people.html', {
 		'developer_list': developer_list,
