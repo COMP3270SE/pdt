@@ -145,8 +145,8 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
             {% if user %}  
-            <li><a href="/tracker/{{ user.pk }}/home">Home</a></li>
-            <li><a href="#">{{ user.name }}</a></li>
+            <li><a href="/tracker/manager/{{ user.account.pk }}/home">Home</a></li>
+            <li><a href="#">{{ user.account.username }}</a></li>
             {% endif %}
             <li><a href="#">Logout</a></li>
           </ul>
@@ -182,7 +182,7 @@
               {% for developer in developer_list %}
               <tr>
                 <td>{{ developer.pk }}</td>
-                <td>{{ developer.name }}</td>
+                <td>{{ developer.account.username }}</td>
               </tr>
               {% endfor %}
             </tbody>

@@ -145,9 +145,9 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
             {% if manager %}  
-            <li><a href="/tracker/{{ manager.pk }}/home">Home</a></li>
+            <li><a href="/tracker/manager/{{ manager.account.pk }}/home">Home</a></li>
             {% endif %}
-    			  <li><a href="#">{{ manager.name }}</a></li>
+    			  <li><a href="#">{{ manager.account.username }}</a></li>
             <li><a href="#">Logout</a></li>
           </ul>
         </div>
