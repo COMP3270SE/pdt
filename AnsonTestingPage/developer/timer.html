@@ -184,23 +184,18 @@
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li><a href="#">Timer</a></li>
-            <li class="active"><a href="#">Report Defect</a></li> 
+            <li class="active"><a href="#">Timer</a></li>
+            <li><a href="#">Report Defect</a></li> 
             <li><a href="#">Project Summary</a></li>
           </ul>
 
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-        <center><h1 class="page-header">Report Defect</h1></center>
+          <h1 class="page-header">Timer</h1>
 
-      <center>
-          <form action="." method="POST">
-            {% csrf_token %}
-            {{ form.as_p }} 
 
-          <input type="submit" value="Summit" />
-          </form>
-      </center>
+
+          <h1>Place for timer</h1>
 
               <!-- Modal -->
               <div id="myModal" class="modal fade" role="dialog">
