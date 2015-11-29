@@ -22,25 +22,25 @@ class Account (AbstractUser):
                                  choices=type_choices,
                                  default='M')
     def __unicode__(self):
-        return self.username
+        return str(self.pk)+":"+self.username
 
 class Manager(models.Model):
-    account = models.OneToOneField(Account, null=True)
+    account = models.OneToOneField(Account)
     uid = models.IntegerField(validators=[MinValueValidator(50000000), MaxValueValidator(99999999)], primary_key=True)
     #name = models.CharField(max_length=100)
     #password = models.CharField(max_length=20)
     
     def __unicode__(self):
-        return str(self.uid)
+        return str(self.account.username)
 
 class Developer(models.Model):
-    account = models.OneToOneField(Account, null=True)
+    account = models.OneToOneField(Account)
     uid = models.IntegerField(validators=[MinValueValidator(10000000), MaxValueValidator(49999999)], primary_key=True)
     #name = models.CharField(max_length=100)
     #password = models.CharField(max_length=20)
     
     def __unicode__(self):
-        return str(self.uid)
+        return str(self.account.username)
 
 class Project(models.Model):
     pid = models.AutoField(primary_key=True)
@@ -300,7 +300,7 @@ class Workrecord(models.Model):
     developer = models.ForeignKey(Developer)
     iteration = models.ForeignKey(Iteration)
     def __unicode__(self):
-        return str(self.wid)+self.developer.name
+        return str(self.wid)+"by"+str(self.developer.account.username)
     
     @property
     def duration(self):

@@ -22,7 +22,10 @@ from . import views
 
 urlpatterns = [
     # http://localhost:8000/tracker/50000000/home/
-    url(r'^(?P<user_id>[0-9]{8})/home/$', views.home, name='home'),
+    # url(r'^(?P<user_id>[0-9]{8})/home/$', views.home, name='home'),
+    url(r'^manager/(?P<user_id>[0-9]+)/home/$', views.managerhome, name='managerhome'),
+    url(r'^developer/(?P<user_id>[0-9]+)/home/$', views.developerhome, name='developerhome'),
+
     # http://localhost:8000/tracker/50000000/createproject/
     url(r'^(?P<user_id>[0-9]{8})/createproject/$', views.createproject, name='createproject'),
     # http://localhost:8000/tracker/50000000/project/1/

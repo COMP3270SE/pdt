@@ -49,29 +49,53 @@ def userlogin(request):
     return render(request, 'tracker/login.html', {})
        
     
-def home(request, user_id):
-	if user_id < 50000000:
-		try:
-			user = get_object_or_404(Developer, pk = user_id)
-			project_list = Project.objects.filter(developer__pk = user_id)
-		except Developer.DoesNotExist:
-			raise Http404("Developer does not exist")
-		return render(request, 'tracker/home.html', {
-			'user': user,
-			'project_list': project_list,
-			'isManager': False
-			})
-	else:
-		try:
-			user = get_object_or_404(Manager, pk = user_id)
-			project_list = Project.objects.filter(manager__pk = user_id)
-		except Manager.DoesNotExist:
-			raise Http404("Manager does not exist")
-		return render(request, 'tracker/home.html', {
-			'user': user,
-			'project_list': project_list,
-			'isManager': True
-			})
+# def home(request, user_id):
+# 	if user_id < 50000000:
+# 		try:
+# 			user = get_object_or_404(Developer, pk = user_id)
+# 			project_list = Project.objects.filter(developer__pk = user_id)
+# 		except Developer.DoesNotExist:
+# 			raise Http404("Developer does not exist")
+# 		return render(request, 'tracker/home.html', {
+# 			'user': user,
+# 			'project_list': project_list,
+# 			'isManager': False
+# 			})
+# 	else:
+# 		try:
+# 			user = get_object_or_404(Manager, pk = user_id)
+# 			project_list = Project.objects.filter(manager__pk = user_id)
+# 		except Manager.DoesNotExist:
+# 			raise Http404("Manager does not exist")
+# 		return render(request, 'tracker/home.html', {
+# 			'user': user,
+# 			'project_list': project_list,
+# 			'isManager': True
+# 			})
+
+def developerhome(request, user_id):
+
+        try:
+            user = get_object_or_404(Developer, account__pk = user_id)
+            project_list = Project.objects.filter(developer__account__pk = user_id)
+        except Developer.DoesNotExist:
+            raise Http404("Developer does not exist")
+        return render(request, 'tracker/home.html', {
+            'user': user,
+            'project_list': project_list,
+            'isManager': False
+            })
+def managerhome(request, user_id):
+        try:
+            user = get_object_or_404(Manager, account__pk = user_id)
+            project_list = Project.objects.filter(manager__account__pk = user_id)
+        except Manager.DoesNotExist:
+            raise Http404("Manager does not exist")
+        return render(request, 'tracker/home.html', {
+            'user': user,
+            'project_list': project_list,
+            'isManager': True
+            })
 
 class ProjectForm(forms.ModelForm):
     class Meta:
