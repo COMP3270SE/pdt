@@ -8,20 +8,29 @@
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
+    <!-- newly added -->
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
     <title>Project Data Tracker</title>
 
-  	<!-- Latest compiled and minified CSS -->
-  	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
 
-  	<!-- Optional theme -->
-  	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
 
-  	<!-- Latest compiled and minified JavaScript -->
-  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+
+    <!-- Anson newly Added script -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
       <!-- Custom styles for this template -->
-  	{% load staticfiles %}
-  	<!--<link rel="stylesheet" type="text/css" href="{% static 'tracker/dashboard.css' %}" />-->
+    {% load staticfiles %}
+    <!--<link rel="stylesheet" type="text/css" href="{% static 'tracker/dashboard.css' %}" />-->
 
     <style>
       /*
@@ -138,17 +147,21 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          {% if project %}
-          <a class="navbar-brand" href="#">{{ project.name }}</a>
-          {% endif %}
+          {% for pro in project %}
+          <a class="navbar-brand" href="#">{{ pro.name }}</a>
+          {% endfor %}
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            {% if manager %}  
-            <li><a href="/tracker/{{ manager.pk }}/home">Home</a></li>
-            {% endif %}
-    			  <li><a href="#">{{ manager.name }}</a></li>
-            <li><a href="#">Logout</a></li>
+            <li><a href="#">Home</a></li>
+            
+          {% for man in manager %}  
+          <li><a href="/tracker/{{ manager.uid }}/home">{{ man.name }}</a></li>
+          {% endfor %}
+            
+            <!-- <li><a href="#">Logout</a></li> -->
+                        <!-- Anson added this new button-->
+            <li><button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Logout</button></li>
           </ul>
         </div>
       </div>
@@ -158,11 +171,9 @@
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            {% if project %}
-            <li><a href="/tracker/{{ project.manager.pk }}/project/{{ project.pk}}">UP</a></li>
-            <li><a href="/tracker/{{ project.manager.pk }}/project/{{ project.pk }}/people">People</a></li>
-            {% endif %}
-            <li class="active"><a href="#">Summary</a></li>
+            <li><a href="#">Show Iteration Status</a></li>
+            <li><a href="#">Developer List</a></li> 
+            <li class="active"><a href="#">Project Summary</a></li>
           </ul>
 
         </div>
@@ -173,6 +184,7 @@
           <div class="table-responsive">
             <h3>Iteration</h3>
             <table class="table table-striped">
+
               <thead>
                 <tr>
                   <th>Iteration Name</th>
@@ -184,7 +196,7 @@
               </thead>
               <tbody>
                 <!-- n iterations -->              
-              	{% for iteration in iteration_list %}
+                {% for iteration in iteration_list %}
                 <tr>
                   <td>{{ iteration.name }}</td>
                   <td>{{ iteration.phase }}</td>
@@ -235,11 +247,11 @@
               <tbody>
                 <!-- 1 project -->
                 <tr>
-                  {% if project %}
+                  {% for pro in project %}
                   <td>{{ pro.SLOC.sum }}</td>                  
                   <td>{{ pro.effort }}</td>
                   <td>{{ pro.SLOC_effort }}</td>
-                  {% endif %}
+                  {% endfor %}
                 </tr>
                 
               </tbody>
@@ -330,14 +342,14 @@
               <tbody>
                 <!-- 1 project -->
                 <tr>
-                  {% if project %}
-                  <td>{{ project.defect_in }}</td>                  
-                  <td>{{ project.defect_out }}</td>
-                  <td>{{ project.defect_in_rate }}</td>
-                  <td>{{ project.defect_out_rate }}</td>
-                  <td>{{ project.defect_density }}</td>
-                  <td>{{ project.defect_yield }}</td>
-                  {% endif %}
+                  {% for pro in project %}
+                  <td>{{ pro.defect_in }}</td>                  
+                  <td>{{ pro.defect_out }}</td>
+                  <td>{{ pro.defect_in_rate }}</td>
+                  <td>{{ pro.defect_out_rate }}</td>
+                  <td>{{ pro.defect_density }}</td>
+                  <td>{{ pro.defect_yield }}</td>
+                  {% endfor %}
                 </tr>
                 
               </tbody>
@@ -347,6 +359,28 @@
         </div>
       </div>
     </div>
+
+              <!-- Modal -->
+              <div id="myModal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+
+                  <!-- Modal content-->
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h4 class="modal-title">Warm reminding</h4>
+                    </div>
+                    <div class="modal-body">
+                      <p>Are you sure to logout?</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
 
     <!-- Bootstrap core JavaScript
     ================================================== -->

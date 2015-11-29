@@ -4,9 +4,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="../../favicon.ico">
 
     <title>Project Data Tracker</title>
 
@@ -20,8 +17,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
 
       <!-- Custom styles for this template -->
-    {% load staticfiles %}
-    <!--<link rel="stylesheet" type="text/css" href="{% static 'tracker/dashboard.css' %}" />-->
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'dashboard.css' %}" />
 
     <style>
       /*
@@ -138,16 +135,16 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          {% if project %}
-          <a class="navbar-brand" href="#">{{ project.name }}</a>
-          {% endif %}
+          <a class="navbar-brand" href="#">Home</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            {% if user %}  
-            <li><a href="/tracker/{{ user.pk }}/home">Home</a></li>
-            <li><a href="#">{{ user.name }}</a></li>
-            {% endif %}
+            <li><a href="#">Home</a></li>
+            
+          {% for person in user %}  
+          <li><a href="/tracker/{{ person.uid }}/home">{{ person.name }}</a></li>
+          {% endfor %}
+            
             <li><a href="#">Logout</a></li>
           </ul>
         </div>
@@ -157,39 +154,26 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
-          <ul class="nav nav-sidebar">
-            {% if project %}
-            <li><a href="/tracker/{{ project.manager.pk }}/project/{{ project.pk}}">UP</a></li>
-            {% endif %}
-            <li class="active"><a href="#">People</a></li>
-            {% if project %}
-            <li><a href="/tracker/{{ project.manager.pk }}/project/{{ project.pk }}/summary">Summary</a></li>
-            {% endif %}
-          </ul>
-        </div>
+          <!--<ul class="nav nav-sidebar">
+            <li><a href="#">UP</a></li>
+            <li><a href="#">People</a></li>
+            <li class="active"><a href="#">Summary</a></li>
+          </ul>-->
 
-      <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-        <div class="col-md-6">
-          <h1 class="page-header">Developer List</h1>
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Name</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for developer in developer_list %}
-              <tr>
-                <td>{{ developer.pk }}</td>
-                <td>{{ developer.name }}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      </div>
 
+          <div class="row placeholders">
+            {% for project in project_list %}
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <img data-src="holder.js/200x200/auto/sky" class="img-responsive" alt="Generic placeholder thumbnail">
+              {% for person in user %}
+              <h4><a href="/tracker/{{ person.uid }}/project/{{ project.pid }}/UP">{{ project.name }}</a></h4>              
+              <span class="text-muted">{{ project.description }}</span>
+              {% endif %}
+            </div>
+            {% endfor %}
+            </div>
+          </div>
+        
 
         </div>
       </div>

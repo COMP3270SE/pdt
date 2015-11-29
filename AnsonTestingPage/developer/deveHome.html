@@ -8,6 +8,10 @@
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
+
+    <!-- newly added -->
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
     <title>Project Data Tracker</title>
 
     <!-- Latest compiled and minified CSS -->
@@ -18,6 +22,11 @@
 
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+
+
+    <!-- Anson newly Added script -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
       <!-- Custom styles for this template -->
     {% load staticfiles %}
@@ -123,6 +132,14 @@
         display: inline-block;
         border-radius: 50%;
       }
+
+      /*Anson added*/
+      .divider{
+      width:10px;
+      height:auto;
+      display:inline-block;
+      }
+
     </style>
 
   </head>
@@ -138,17 +155,30 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          {% if project %}
-          <a class="navbar-brand" href="#">{{ project.name }}</a>
-          {% endif %}
+
+          <!-- Anson remarks:it should not have project ID yet in home page -->
+<!--           {% for pro in project %}
+          <a class="navbar-brand" href="#">{{ pro.name }}</a>
+          {% endfor %} -->
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            {% if user %}  
-            <li><a href="/tracker/{{ user.pk }}/home">Home</a></li>
-            <li><a href="#">{{ user.name }}</a></li>
-            {% endif %}
-            <li><a href="#">Logout</a></li>
+            <li><a href="#">Home</a></li>
+
+            <!-- Anson words : it should change from manager to developer -->
+
+
+          <!-- {% for man in manager %}   -->
+          <li><a href="/tracker/{{ manager.uid }}/home">Name of the developer</a></li>
+          <!-- {% endfor %} -->
+            
+            <!-- <li><a href="#">Logout</a></li> -->
+            <!-- <li><button type="button" class="btn btn-primary btn-lg">logout</button></li> -->
+
+            <!-- Trigger the modal with a button -->
+            <!-- Anson added this new button-->
+            <li><button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Logout</button></li>
+            
           </ul>
         </div>
       </div>
@@ -158,51 +188,54 @@
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            {% if project %}
-            <li><a href="/tracker/{{ project.manager.pk }}/project/{{ project.pk}}">UP</a></li>
-            {% endif %}
-            <li class="active"><a href="#">People</a></li>
-            {% if project %}
-            <li><a href="/tracker/{{ project.manager.pk }}/project/{{ project.pk }}/summary">Summary</a></li>
-            {% endif %}
+<!--             <li><a href="#">Create New Project</a></li>
+            <li><a href="#">Show Iteration Status</a></li>
+            <li><a href="#">Developer List</a></li> 
+            <li><a href="#">Project Summary</a></li> -->
           </ul>
-        </div>
 
-      <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-        <div class="col-md-6">
-          <h1 class="page-header">Developer List</h1>
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Name</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for developer in developer_list %}
-              <tr>
-                <td>{{ developer.pk }}</td>
-                <td>{{ developer.name }}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
         </div>
-      </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h1 class="page-header">Home</h1>
 
+          <!-- As a developer, they can only choose existed projects -->
+
+          <button type="button" class="btn btn-primary btn-lg">Project 1</button>
+          <div class="divider"/></div>
+          <button type="button" class="btn btn-primary btn-lg">Project 2</button>
+          <div class="divider"/></div>
+          <button type="button" class="btn btn-primary btn-lg">Project 3</button>
+
+              <!-- Modal -->
+              <div id="myModal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+
+                  <!-- Modal content-->
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h4 class="modal-title">Warm reminding</h4>
+                    </div>
+                    <div class="modal-body">
+                      <p>Are you sure to logout?</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+          <div class="table-responsive">
+
+
+          </div>
 
         </div>
       </div>
     </div>
 
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <!--<script src="{% static 'dist/js/bootstrap.min.js' %}"></script>-->
-    <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
-    <!--<script src="{% static 'assets/js/vendor/holder.min.js' %}"></script>-->
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <!--<script src="{% static 'assets/js/ie10-viewport-bug-workaround.js' %}"></script>-->
+
   </body>
 </html>

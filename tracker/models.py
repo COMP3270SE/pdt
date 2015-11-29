@@ -43,7 +43,7 @@ class Developer(models.Model):
         return str(self.uid)
 
 class Project(models.Model):
-    pid = models.IntegerField(default=0, primary_key=True)
+    pid = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=200)
     manager = models.ForeignKey(Manager)
@@ -69,7 +69,10 @@ class Project(models.Model):
 
     @property
     def SLOC_effort(self):
-        return round(self.SLOC['sum']/self.effort, 2)
+        divider = self.effort
+        if divider == 0:
+            return "NA"
+        return round(self.SLOC['sum']/divider, 2)
 
     @property
     def defect_in(self):
@@ -83,11 +86,17 @@ class Project(models.Model):
 
     @property
     def defect_in_rate(self):
-        return round(self.defect_in/self.effort, 2)
+        divider = self.effort
+        if divider == 0:
+            return "NA"
+        return round(self.defect_in/divider, 2)
 
     @property
     def defect_out_rate(self):
-        return round(self.defect_out/self.effort, 2)
+        divider = self.effort
+        if divider == 0:
+            return "NA"
+        return round(self.defect_out/divider, 2)
 
     @property
     def defect_density(self):
@@ -108,7 +117,7 @@ class Project(models.Model):
 
 class Phase(models.Model):
     type = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(4)])
-    phase_id = models.IntegerField(default=0, primary_key = True)
+    phase_id = models.AutoField(primary_key = True)
     project = models.ForeignKey(Project)
 
     def __unicode__(self):
@@ -163,7 +172,10 @@ class Phase(models.Model):
 
     @property
     def defect_density(self):
-        return float(self.defect_in)/ float(1000*self.SLOC['sum'])
+        divider = float(1000*self.SLOC['sum'])
+        if divider == 0:
+            return "NA"
+        return float(self.defect_in)/ divider
 
     @property
     def defect_in_total(self):
@@ -195,7 +207,7 @@ class Phase(models.Model):
 
 class Iteration(models.Model):
     SLOC = models.IntegerField(default=0)
-    iteration_id = models.IntegerField(default=0, primary_key = True)
+    iteration_id = models.AutoField(primary_key = True)
     time_length = models.IntegerField(default=0)
     status = models.IntegerField(default=0)
     name = models.CharField(max_length=100)

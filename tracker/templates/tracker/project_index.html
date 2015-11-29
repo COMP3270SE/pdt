@@ -4,9 +4,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="../../favicon.ico">
 
     <title>Project Data Tracker</title>
 
@@ -19,9 +16,13 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
 
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
       <!-- Custom styles for this template -->
-    {% load staticfiles %}
-    <!--<link rel="stylesheet" type="text/css" href="{% static 'tracker/dashboard.css' %}" />-->
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'dashboard.css' %}" />
 
     <style>
       /*
@@ -123,6 +124,14 @@
         display: inline-block;
         border-radius: 50%;
       }
+      button:before {
+        font-family: 'entypo', sans-serif;
+        color: white;
+        position: absolute;
+        : px;
+        font-size: 2em;
+        top: 25%;
+        z-index: 10;}
     </style>
 
   </head>
@@ -143,7 +152,7 @@
           {% endif %}
         </div>
         <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav navbar-right">
+          <ul class="nav navbar-nav navbar-right">            
             {% if user %}  
             <li><a href="/tracker/{{ user.pk }}/home">Home</a></li>
             <li><a href="#">{{ user.name }}</a></li>
@@ -154,46 +163,101 @@
       </div>
     </nav>
 
+
     <div class="container-fluid">
       <div class="row">
+
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
+            <li class="active"><a href="#">UP</a></li>
             {% if project %}
-            <li><a href="/tracker/{{ project.manager.pk }}/project/{{ project.pk}}">UP</a></li>
-            {% endif %}
-            <li class="active"><a href="#">People</a></li>
-            {% if project %}
+            <li><a href="/tracker/{{ project.manager.pk }}/project/{{ project.pk }}/people">People</a></li>
             <li><a href="/tracker/{{ project.manager.pk }}/project/{{ project.pk }}/summary">Summary</a></li>
             {% endif %}
           </ul>
         </div>
 
-      <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-        <div class="col-md-6">
-          <h1 class="page-header">Developer List</h1>
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Name</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for developer in developer_list %}
-              <tr>
-                <td>{{ developer.pk }}</td>
-                <td>{{ developer.name }}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <div class="row">
+          <div class="col-sm-4">
+
+            
 
 
+            <div class="container">
+              <!-- Trigger the modal with a button -->
+              {% if active_iteration %}
+              <button type="button" class="btn btn-lg btn-danger" data-toggle="modal" data-target="#myModal">Close Current Iteration</button>
+              {% elif is_opened_iteration %}
+              <button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#myModal">Start Iteration</button>
+              {% endif %}
+              <!-- Modal -->
+              <div class="modal fade" id="myModal" role="dialog">
+                <div class="modal-dialog modal-sm">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h3 class="modal-title">Warning!</h3>
+                    </div>
+                    <div class="modal-body">
+                      <p>Do you really want to close current iteration?</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                      <form
+                      <button type="button" class="btn btn-default" data-dismiss="modal" onclick="closeIteration()">Yes</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+
+
+
+            <form class="form-horizontal" role="form" method="post" action=".">
+              {% csrf_token %}
+              {{ it_form.as_p }}
+              <div class="form-group">        
+                <div class="col-sm-offset-2 col-sm-10">
+                  <button type="submit" class="btn btn-default">Submit</button>
+                </div>
+              </div>
+            </form>
+
+
+
+
+            <h2>Phase List</h2>
+            {% for phase in phase_list %}
+            <div class="list-group">
+              <a href="#" class="list-group-item">
+                <h3 class="list-group-item-heading">{{ phase }}</h3></br>
+              </a>
+            </div>
+            {% endfor %}
+
+            <hr>
+            <h2>Iteration List</h2>
+            {% for iteration in iteration_list %}
+            <div class="list-group">
+              <a href="#" class="list-group-item">
+                <h3 class="list-group-item-heading">{{ iteration.pk }}. {{ iteration.name }}</h3>
+                <p class="list-group-item-text">Phase: {{ iteration.phase }}</p>
+                <p class="list-group-item-text">Status: {{ iteration.status }}</p>
+              </a>
+            </div>
+            {% endfor %}
+
+          </div>
         </div>
+        </div>
+
       </div>
     </div>
+
+
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
@@ -204,5 +268,12 @@
     <!--<script src="{% static 'assets/js/vendor/holder.min.js' %}"></script>-->
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <!--<script src="{% static 'assets/js/ie10-viewport-bug-workaround.js' %}"></script>-->
+    <script type="text/javascript">
+    function closeIteration() {
+        document.getElementById("close_iteration").innerHTML = "Hello World";
+
+
+    }
+    </script>
   </body>
 </html>
