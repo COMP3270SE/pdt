@@ -12,14 +12,14 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.CreateModel(
-            name='Workrecord',
-            fields=[
-                ('wid', models.IntegerField(default=0, serialize=False, primary_key=True)),
-                ('date', models.DateTimeField(default=datetime.datetime.now, blank=True)),
-                ('starttime', models.DateTimeField(default=datetime.datetime.now, blank=True)),
-                ('endtime', models.DateTimeField(default=datetime.datetime.now, blank=True)),
-                ('developer', models.ForeignKey(to='tracker.Developer')),
-            ],
-        ),
+        # migrations.CreateModel(
+        #     name='Workrecord',
+        #     fields=[
+        #         ('wid', models.IntegerField(default=0, serialize=False, primary_key=True)),
+        #         ('date', models.DateTimeField(default=datetime.datetime.now, blank=True)),
+        #         ('starttime', models.DateTimeField(default=datetime.datetime.now, blank=True)),
+        #         ('endtime', models.DateTimeField(default=datetime.datetime.now, blank=True)),
+        #         ('developer', models.ForeignKey(to='tracker.Developer')),
+        #     ],
+        # ),
     ]

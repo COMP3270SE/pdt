@@ -4,6 +4,7 @@ from django.db import models
 from datetime import timedelta
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db.models import Count, Sum
+from django.contrib.auth.models import AbstractUser
 
 ########
 # Many-to-one: iteration - phase, phase - project, project - manager,
@@ -11,21 +12,35 @@ from django.db.models import Count, Sum
 # Mant-to-many: developer - project,
 # One-to-one:
 
+class Account (AbstractUser):
+    type_choices = (
+        ('SU', 'Super User'),
+        ('M', 'Manager'),
+        ('D', 'Developer'),
+    )
+    user_type = models.CharField(max_length=2,
+                                 choices=type_choices,
+                                 default='M')
+    def __unicode__(self):
+        return self.username
+
 class Manager(models.Model):
+    account = models.OneToOneField(Account, null=True)
     uid = models.IntegerField(validators=[MinValueValidator(50000000), MaxValueValidator(99999999)], primary_key=True)
-    name = models.CharField(max_length=100)
-    password = models.CharField(max_length=20)
+    #name = models.CharField(max_length=100)
+    #password = models.CharField(max_length=20)
     
     def __unicode__(self):
-        return self.name
+        return str(self.uid)
 
 class Developer(models.Model):
+    account = models.OneToOneField(Account, null=True)
     uid = models.IntegerField(validators=[MinValueValidator(10000000), MaxValueValidator(49999999)], primary_key=True)
-    name = models.CharField(max_length=100)
-    password = models.CharField(max_length=20)
+    #name = models.CharField(max_length=100)
+    #password = models.CharField(max_length=20)
     
     def __unicode__(self):
-        return self.name
+        return str(self.uid)
 
 class Project(models.Model):
     pid = models.IntegerField(default=0, primary_key=True)

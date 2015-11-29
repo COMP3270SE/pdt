@@ -2,7 +2,8 @@ from django.shortcuts import get_object_or_404, render, render_to_response
 from django.db.models import Aggregate
 from django.db.models import Count, Sum
 
-from django.shortcuts import render_to_response
+from django.template.context_processors import csrf
+
 from django.contrib.auth import authenticate, login
 
 from .models import Project, Developer, Manager
@@ -10,6 +11,7 @@ from .models import Phase, Iteration, Defect
 from .models import Workrecord
 
 from django import forms
+from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 import datetime
 
@@ -23,7 +25,28 @@ def index(request):
     #    'project_list': project_list,
     #})
     #return HttpResponse(template.render(context))
-    
+ 
+def userlogin(request):
+    c = {}
+    c.update(csrf(request))
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        # username = request.POST.get("username", "Guest")
+        # password = request.POST.get("password", "Guest")
+        user = authenticate(username=username, password=password)
+        if user is not None:            
+                login(request, user)                
+                if user.user_type=='M':
+                	return HttpResponseRedirect('/tracker/manager/'+str(user.pk)+'/home')
+                else:
+           			return HttpResponseRedirect('/tracker/developer/'+str(user.pk)+'/home')
+        else:
+            # Return an 'invalid login' error message.
+            print HttpResponse('Incorrect username or password.')
+    return render(request, 'tracker/login.html', {})
+       
+
 def home(request, id):
 	if id < 50000000:
 		try:
