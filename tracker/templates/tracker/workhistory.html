@@ -165,7 +165,7 @@
             
           <!-- {% for man in manager %}   -->
           <!-- Anson remarks: change to show developers name  -->
-          <li><a href="/tracker/{{ manager.account.pk }}/home"> Developers name</a></li>
+          <li><a href="/tracker/{{ manager.uid }}/home"> Developers name</a></li>
           <!-- {% endfor %} -->
             
             <!-- <li><a href="#">Logout</a></li> -->
@@ -185,8 +185,8 @@
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
             <li><a href="#">Timer</a></li>
-            <li class="active"><a href="#">Report Defect</a></li> 
-            <li><a href="#">Project Summary</a></li>
+            <li><a href="#">Report Defect</a></li> 
+            <li class="active"><a href="#">Work History</a></li>
           </ul>
         </div>
       </div>
@@ -196,15 +196,26 @@
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
     
     <div class="alert alert-info">
-        <center><h1 class="page-header">Report Defect</h1></center>
-        <center>
-          <form action="." method="POST">
-            {% csrf_token %}
-            {{ form.as_p }} 
 
-          <input type="submit" value="Summit" />
-          </form>
-        </center>
+           <h1 class="page-header">Work History</h1>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Work history</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for developer in developer_list %}
+              <tr>
+                <td>{{ developer.pk }}</td>
+                <td>{{ developer.name }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+
     </div>
     </div>
 
@@ -222,7 +233,7 @@
                       <p>Are you sure to logout?</p>
                     </div>
                     <div class="modal-footer">
-                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Yes</button>
                     </div>
                   </div>
 
