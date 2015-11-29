@@ -4,7 +4,10 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
     <title>Developing Mode</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script type='text/javascript'>
+
     // 0/1 = start/end
     // 2 = state
     // 3 = length, ms
@@ -122,6 +125,10 @@
 <div id='main'>
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <a class="navbar-brand" >Timer</a>
+        <ul class="nav navbar-nav navbar-right">
+        <a class="navbar-brand" >Home</a>
+        <li><button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Logout</button></li>
+        </ul>
     </nav>
     <br><br><br>
     <h1>Let's start working!</h1>
@@ -152,6 +159,27 @@ ga.setAttribute('async', 'true');
 document.documentElement.firstChild.appendChild(ga);
 })();
 </script>
+
+              <!-- Modal -->
+              <div id="myModal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+
+                  <!-- Modal content-->
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h4 class="modal-title">Warm reminding</h4>
+                    </div>
+                    <div class="modal-body">
+                      <p>Are you sure to logout without submitting time record?</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
 
 </body>
 </html>
