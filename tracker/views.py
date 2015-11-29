@@ -6,6 +6,7 @@ from django.db.models import Q
 from django.template.context_processors import csrf
 
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 
 from .models import Project, Developer, Manager
 from .models import Phase, Iteration, Defect
@@ -48,31 +49,7 @@ def userlogin(request):
             print HttpResponse('Incorrect username or password.')
     return render(request, 'tracker/login.html', {})
        
-    
-# def home(request, user_id):
-# 	if user_id < 50000000:
-# 		try:
-# 			user = get_object_or_404(Developer, pk = user_id)
-# 			project_list = Project.objects.filter(developer__pk = user_id)
-# 		except Developer.DoesNotExist:
-# 			raise Http404("Developer does not exist")
-# 		return render(request, 'tracker/home.html', {
-# 			'user': user,
-# 			'project_list': project_list,
-# 			'isManager': False
-# 			})
-# 	else:
-# 		try:
-# 			user = get_object_or_404(Manager, pk = user_id)
-# 			project_list = Project.objects.filter(manager__pk = user_id)
-# 		except Manager.DoesNotExist:
-# 			raise Http404("Manager does not exist")
-# 		return render(request, 'tracker/home.html', {
-# 			'user': user,
-# 			'project_list': project_list,
-# 			'isManager': True
-# 			})
-
+@login_required
 def developerhome(request, user_id):
 
         try:
@@ -85,6 +62,8 @@ def developerhome(request, user_id):
             'project_list': project_list,
             'isManager': False
             })
+
+@login_required
 def managerhome(request, user_id):
         try:
             user = get_object_or_404(Manager, account__pk = user_id)
@@ -110,7 +89,7 @@ def createproject(request, user_id):
 			return HttpResponseRedirect('/tracker/'+user_id+'/home/')
 
 	form = ProjectForm()
-	user = get_object_or_404(Manager, pk = user_id)
+	user = get_object_or_404(Manager, account__pk = user_id)
 	return render(request, 'tracker/createproject.html', {
     	'form': form,
     	'user': user

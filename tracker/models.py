@@ -26,7 +26,7 @@ class Account (AbstractUser):
 
 class Manager(models.Model):
     account = models.OneToOneField(Account)
-    uid = models.IntegerField(validators=[MinValueValidator(50000000), MaxValueValidator(99999999)], primary_key=True)
+    #uid = models.IntegerField(validators=[MinValueValidator(50000000), MaxValueValidator(99999999)], primary_key=True)
     #name = models.CharField(max_length=100)
     #password = models.CharField(max_length=20)
     
@@ -35,7 +35,7 @@ class Manager(models.Model):
 
 class Developer(models.Model):
     account = models.OneToOneField(Account)
-    uid = models.IntegerField(validators=[MinValueValidator(10000000), MaxValueValidator(49999999)], primary_key=True)
+    #uid = models.IntegerField(validators=[MinValueValidator(10000000), MaxValueValidator(49999999)], primary_key=True)
     #name = models.CharField(max_length=100)
     #password = models.CharField(max_length=20)
     
