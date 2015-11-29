@@ -188,19 +188,25 @@
             <li class="active"><a href="#">Report Defect</a></li> 
             <li><a href="#">Project Summary</a></li>
           </ul>
-
         </div>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-        <center><h1 class="page-header">Report Defect</h1></center>
+      </div>
+    </div>
 
-      <center>
+
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    
+    <div class="alert alert-info">
+        <center><h1 class="page-header">Report Defect</h1></center>
+        <center>
           <form action="." method="POST">
             {% csrf_token %}
             {{ form.as_p }} 
 
           <input type="submit" value="Summit" />
           </form>
-      </center>
+        </center>
+    </div>
+    </div>
 
               <!-- Modal -->
               <div id="myModal" class="modal fade" role="dialog">
