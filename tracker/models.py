@@ -122,13 +122,13 @@ class Phase(models.Model):
 
     def __unicode__(self):
         if self.type == 1:
-	        return self.project.name + ": P1"
+	        return self.project.name + ": Inception Phase"
         elif self.type == 2:
-	    	return self.project.name + ": P2"
+	    	return self.project.name + ": Elaboration Phase"
         elif self.type == 3:
-	    	return self.project.name + ": P3"
+	    	return self.project.name + ": Construction Phase"
         else:
-	    	return self.project.name + ": P4"
+	    	return self.project.name + ": Transition Phase"
     
     @property
     def SLOC(self):

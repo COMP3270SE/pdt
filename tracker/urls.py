@@ -21,8 +21,7 @@ from django.conf import settings
 from . import views
 
 urlpatterns = [
-    # http://localhost:8000/tracker/50000000/home/
-    # url(r'^(?P<user_id>[0-9]{8})/home/$', views.home, name='home'),
+
     url(r'^manager/(?P<user_id>[0-9]+)/home/$', views.managerhome, name='managerhome'),
     url(r'^developer/(?P<user_id>[0-9]+)/home/$', views.developerhome, name='developerhome'),
 
@@ -32,8 +31,9 @@ urlpatterns = [
     url(r'^(?P<user_id>[0-9]+)/project/(?P<project_id>[0-9]+)/$', views.viewproject, name='viewproject'),
     # http://localhost:8000/tracker/Defect/50000000/home/
     url(r'^Defect/(?P<defect_id>[0-9]+)/$', views.showDefect, name='showdefect'),
-    # http://localhost:8000/tracker/50000000/timing/
-    url(r'^(?P<id>[0-9]{8})/timing/$', views.timing, name='timing'),
+
+    url(r'^(?P<user_id>[0-9]+)/project/(?P<project_id>[0-9]+)/timing/$', views.timing, name='timing'),
+
     # http://localhost:8000/tracker/50000000/reportdefect/
     url(r'^(?P<id>[0-9]{8})/reportdefect/$', views.reportDefect, name='reportdefect'),
     # http://localhost:8000/tracker/50000000/project/1/people/
