@@ -20,6 +20,9 @@
         t[2]=1-t[2];
 
         if (0==t[2]) {
+            var timezonediff = new Date();
+            timezonediff.setMinutes(timezonediff.getTimezoneOffset() + 60);
+
             clearInterval(t[4]);
             t[3]+=t[1]-t[0];
             var row=document.createElement('tr');
@@ -27,10 +30,10 @@
             td.innerHTML=(t[7]++);// No.
             row.appendChild(td);
             td=document.createElement('td');
-            td.innerHTML=format(t[1]-t[0]);// time interval
+            td.innerHTML=format(t[0] + timezonediff.valueOf());// start time
             row.appendChild(td);
             td=document.createElement('td');
-            td.innerHTML=format(t[3]);// total time
+            td.innerHTML=format(t[1] + timezonediff.valueOf());// end time
             row.appendChild(td);
             document.getElementById('lap').appendChild(row);
             t[4]=t[1]=t[0]=0;
@@ -70,8 +73,7 @@
     }
 
     function load() {
-        t[5] = new Date().valueOf();
-    	// t[5]=new Date(1970, 1, 1, 0, 0, 0, 0).valueOf();
+    	t[5]=new Date(1970, 1, 1, 0, 0, 0, 0).valueOf();
     	t[6]=document.getElementById('disp');
 
     	disp();
@@ -80,6 +82,12 @@
     		document.getElementById('remote').style.visibility='visible';
     	}
     }
+
+    // function save()
+    // {
+    //     // document.records.submit();
+    //     document.getElementById('records').submit();
+    // }
 
 
     </script>
@@ -132,13 +140,14 @@
 	<button type='button' class="btn btn-info" onclick='r()' onfocus='this.blur()'>Reset</button>
 </div>
     <br><br><br>
-    <form name="records" method="post">
+    <form id='records' name="records" method="post">
         <table class="table" >
-        	<tr><th>Lap #</th><th>This Lap</th><th>Running Total</th></tr>
+        <tr><th>Lap #</th><th>Start Time</th><th>End Time</th></tr>
         	<tbody id='lap'></tbody>
         </table>
-        <input type="hidden" name="name" value="your value"/>
-        <button type='button' class="btn btn-info" type="submit">Save</button>
+        {% csrf_token %}
+        
+        <button type='button' action="." class="btn btn-info" type="submit">Save</button>
     </form>
 
 <script type="text/javascript">
