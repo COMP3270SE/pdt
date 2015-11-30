@@ -19,16 +19,6 @@ from django.http import HttpResponseRedirect
 import datetime
 
 # Each view function takes at least one parameter, called request
-def index(request, project_id):
-    phase_list = Phase.objects.filter(project__pk = project_id).order_by('pk')
-    iteration_list = Iteration.objects.filter(phase__in = phase_list).order_by('pk')
-    context = {'phase_list': project_list, 'iteration_list': iteration_list}
-    return render(request, 'tracker/index.html', context)
-    #template = loader.get_template('tracker/index.html')
-    #context = RequestContext(request, {
-    #    'project_list': project_list,
-    #})
-    #return HttpResponse(template.render(context))
  
 def userlogin(request):
     c = {}
@@ -104,7 +94,10 @@ def viewproject(request, user_id, project_id):
 	user = get_object_or_404(Manager, account__pk = user_id)
 	project = get_object_or_404(Project, pk = project_id)
 	phase_list = Phase.objects.filter(project__pk = project_id).order_by('type')
-	iteration_list = Iteration.objects.filter(phase__in = phase_list).order_by('pk')
+	iteration_list1 = Iteration.objects.filter(phase__in = phase_list, phase__type = 1).order_by('pk')
+	iteration_list2 = Iteration.objects.filter(phase__in = phase_list, phase__type = 2).order_by('pk')
+	iteration_list3 = Iteration.objects.filter(phase__in = phase_list, phase__type = 3).order_by('pk')
+	iteration_list4 = Iteration.objects.filter(phase__in = phase_list, phase__type = 4).order_by('pk')
 	active_iteration = get_object_or_404(Iteration, status = 1, phase__project__pk = project_id)
 	if Iteration.objects.filter(~Q(status=0)).count() > 0:
 		is_opened_iteration = True
@@ -114,7 +107,10 @@ def viewproject(request, user_id, project_id):
 	return render(request, 'tracker/project_index.html', {
 		'user': user,
 		'phase_list': phase_list,
-		'iteration_list': iteration_list,
+		'iteration_list1': iteration_list1,
+        'iteration_list2': iteration_list2,
+        'iteration_list3': iteration_list3,
+        'iteration_list4': iteration_list4,
 		'project': project,
 		'active_iteration': active_iteration,
 		'is_opened_iteration': is_opened_iteration

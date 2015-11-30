@@ -46,9 +46,6 @@ urlpatterns = [
     # http://localhost:8000/tracker/4/project/1/reportdefect/
     url(r'^(?P<user_id>[0-9]+)/project/(?P<project_id>[0-9]+)/reportdefect/$', views.reportDefect, name='reportdefect'),
     
-   
-    # http://localhost:8000/tracker/2/project/1/
-    url(r'^(?P<user_id>[0-9]{8})/project/(?P<project_id>[0-9]+)/$', views.index, name='index'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 urlpatterns += staticfiles_urlpatterns()

@@ -251,15 +251,46 @@
             <h3>Iteration List</h3></button>
             <div id="demo" class="collapse">
 
-            {% for iteration in iteration_list %}
-            <div class="list-group">
-              <a href="#" class="list-group-item">
-                <h3 class="list-group-item-heading">{{ iteration.pk }}. {{ iteration.name }}</h3>
-                <p class="list-group-item-text">Phase: {{ iteration.phase }}</p>
-                <p class="list-group-item-text">Status: {{ iteration.status }}</p>
-              </a>
-            </div>
+            {% for iteration in iteration_list1 %}
+                <div class="list-group">
+                  <a href="#" class="list-group-item">
+                    <h3 class="list-group-item-heading">{{ iteration.pk }}. {{ iteration.name }}</h3>
+                    <p class="list-group-item-text">Phase: {{ iteration.phase }}</p>
+                    <p class="list-group-item-text">Status: {{ iteration.status }}</p>
+                  </a>
+                </div>
             {% endfor %}
+            {% for iteration in iteration_list2 %}
+                <div class="list-group">
+                  <a href="#" class="list-group-item">
+                    <h3 class="list-group-item-heading">{{ iteration.pk }}. {{ iteration.name }}</h3>
+                    <p class="list-group-item-text">Phase: {{ iteration.phase }}</p>
+                    <p class="list-group-item-text">Status: {{ iteration.status }}</p>
+                  </a>
+                </div>
+            {% endfor %}
+            {% for iteration in iteration_list3 %}
+                <div class="list-group">
+                  <a href="#" class="list-group-item">
+                    <h3 class="list-group-item-heading">{{ iteration.pk }}. {{ iteration.name }}</h3>
+                    <p class="list-group-item-text">Phase: {{ iteration.phase }}</p>
+                    <p class="list-group-item-text">Status: {{ iteration.status }}</p>
+                  </a>
+                </div>
+            {% endfor %}
+            {% for iteration in iteration_list4 %}
+                <div class="list-group">
+                  <a href="#" class="list-group-item">
+                    <h3 class="list-group-item-heading">{{ iteration.pk }}. {{ iteration.name }}</h3>
+                    <p class="list-group-item-text">Phase: {{ iteration.phase }}</p>
+                    <p class="list-group-item-text">Status: {{ iteration.status }}</p>
+                  </a>
+                </div>
+            {% endfor %}
+
+
+
+
 
             </div>
             </div>
