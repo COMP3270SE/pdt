@@ -101,12 +101,12 @@ class Project(models.Model):
     @property
     def defect_in(self):
         iteration_list = Iteration.objects.filter(phase__project__exact = self)
-        return Defect.objects.filter(in_iteration__in = iteration_list).count()
+        return Defect.objects.filter(injection_iteration__in = iteration_list).count()
 
     @property
     def defect_out(self):
         iteration_list = Iteration.objects.filter(phase__project__exact = self)
-        return Defect.objects.filter(out_iteration__in = iteration_list).count()
+        return Defect.objects.filter(removal_iteration__in = iteration_list).count()
 
     @property
     def defect_in_rate(self):
@@ -200,12 +200,12 @@ class Phase(models.Model):
     @property
     def defect_in(self):
         iteration_list = Iteration.objects.filter(phase = self)
-        return Defect.objects.filter(in_iteration__in = iteration_list).count()
+        return Defect.objects.filter(injection_iteration__in = iteration_list).count()
 
     @property
     def defect_out(self):
         iteration_list = Iteration.objects.filter(phase = self)
-        return Defect.objects.filter(out_iteration__in = iteration_list).count()
+        return Defect.objects.filter(removal_iteration__in = iteration_list).count()
 
     @property
     def defect_in_rate(self):
@@ -246,7 +246,7 @@ class Phase(models.Model):
     def defect_yield(self):
         escape_rate = Project.objects.filter(pid = self.project.pid)[0].est_escape
         last_phase = Phase.objects.filter(project = self.project).order_by('-phase_id')[0]
-        defect_escape = escape_rate * Defect.objects.filter(in_iteration__phase=self, out_iteration__phase=last_phase).count()
+        defect_escape = escape_rate * Defect.objects.filter(injection_iteration__phase=self, removal_iteration__phase=last_phase).count()
         pre_defect_out_total = self.defect_out_total
         divider = defect_escape + self.defect_in_total - pre_defect_out_total
         if divider == 0:
@@ -307,11 +307,11 @@ class Iteration(models.Model):
 
     @property
     def defect_in(self):
-        return Defect.objects.filter(in_iteration = self).count()
+        return Defect.objects.filter(injection_iteration = self).count()
 
     @property
     def defect_out(self):
-        return Defect.objects.filter(out_iteration = self).count()
+        return Defect.objects.filter(removal_iteration = self).count()
 
     @property
     def defect_in_rate(self):
@@ -349,7 +349,7 @@ class Iteration(models.Model):
     def defect_yield(self):
         escape_rate = Project.objects.filter(pid = self.phase.project.pid)[0].est_escape
         last_iteration = Iteration.objects.filter(phase__project__exact = self.phase.project).order_by('-iteration_id')[0]
-        defect_escape = escape_rate * Defect.objects.filter(in_iteration = self, out_iteration=last_iteration).count()
+        defect_escape = escape_rate * Defect.objects.filter(injection_iteration = self, removal_iteration=last_iteration).count()
         pre_defect_out_total = self.defect_out_total
         divider = defect_escape + self.defect_in_total - pre_defect_out_total
         if divider == 0:
@@ -361,12 +361,12 @@ class Defect(models.Model):
     did = models.IntegerField(default=0, primary_key=True)
     type = models.IntegerField(default=0)
     description = models.CharField(max_length=1000)
-    in_iteration = models.ForeignKey(Iteration, related_name='injection', default=1)
-    out_iteration = models.ForeignKey(Iteration, related_name='removal', default=1)
+    injection_iteration = models.ForeignKey(Iteration, related_name='injection', default=1)
+    removal_iteration = models.ForeignKey(Iteration, related_name='removal', default=1)
     developer = models.ForeignKey(Developer) 
     
     def __unicode__(self):
-        return str(self.did)+"-"+str(self.type)+": in-"+str(self.in_iteration)+", out-"+str(self.out_iteration)
+        return str(self.did)+"-"+str(self.type)+": injection-"+str(self.injection_iteration)+", removal-"+str(self.removal_iteration)
 
 class Workrecord(models.Model):
     wid = models.IntegerField(default=0, primary_key=True)

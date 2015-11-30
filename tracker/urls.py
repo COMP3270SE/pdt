@@ -43,8 +43,8 @@ urlpatterns = [
     url(r'^(?P<user_id>[0-9]+)/workonproject/(?P<project_id>[0-9]+)/timing/$', views.timing, name='timing'),
     url(r'^(?P<user_id>[0-9]+)/workonproject/(?P<project_id>[0-9]+)/$', views.workonproject, name='workonproject'),
 
-    # http://localhost:8000/tracker/2/reportdefect/
-    url(r'^(?P<id>[0-9]{8})/reportdefect/$', views.reportDefect, name='reportdefect'),
+    # http://localhost:8000/tracker/4/project/1/reportdefect/
+    url(r'^(?P<user_id>[0-9]+)/project/(?P<project_id>[0-9]+)/reportdefect/$', views.reportDefect, name='reportdefect'),
     
    
     # http://localhost:8000/tracker/2/project/1/
