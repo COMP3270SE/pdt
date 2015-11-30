@@ -221,15 +221,17 @@
               {{ it_form.as_p }}
               <div class="form-group">        
                 <div class="col-sm-offset-2 col-sm-10">
-                  <button type="submit" class="btn btn-default">Submit</button>
+                  <!-- <button type="submit" class="btn btn-default">Submit</button> -->
+                  <!-- Anson think this submit button is not needed, so comment out -->
                 </div>
               </div>
             </form>
 
 
-
-
-            <h2>Phase List</h2>
+    <div class="panel panel-success">
+      <div class="panel-heading"><h2>Phase List</h2></div>
+      <div class="panel-body">
+            
             {% for phase in phase_list %}
             <div class="list-group">
               <a href="#" class="list-group-item">
@@ -238,8 +240,17 @@
             </div>
             {% endfor %}
 
+      </div>
+      </div>
+
             <hr>
-            <h2>Iteration List</h2>
+
+            <!-- <h2>Iteration List</h2> -->
+
+            <button type="button" class="btn btn-lg btn-info" data-toggle="collapse" data-target="#demo">
+            <h3>Iteration List</h3></button>
+            <div id="demo" class="collapse">
+
             {% for iteration in iteration_list %}
             <div class="list-group">
               <a href="#" class="list-group-item">
@@ -249,6 +260,9 @@
               </a>
             </div>
             {% endfor %}
+
+            </div>
+            </div>
 
           </div>
         </div>
