@@ -169,19 +169,31 @@
     <br><br><br>
     <div id='main' class="col-sm-3  sidebar">
         <ul class="nav nav-sidebar">
-            <li><h2>{{ active_iteration.phase.project.name}}</h2></li>
-            <li><h3>Active Iteration: {{ active_iteration.name}}</h3></li>
 
- 
-            <br>
-        	<input type='button' value="Start" class="btn btn-info" onclick="return changeStatus(this)" onfocus='this.blur()' id='Startbutton'/>
-            <br>
+
+          <div class="panel-group">
+            <div class="panel panel-info">
+              <div class="panel-heading"><li><h2>{{ active_iteration.phase.project.name}}</h2></li></div>
+              <div class="panel-heading"><li><h3>Active Iteration: {{ active_iteration.name}}</h3></li></div>
+              <div class="panel-body">
+
+          <div class="panel panel-primary">
+          <div class="panel-body">
+
         	<input type='text' id='disp' />
-            <br>
-        	<button type='button' class="btn btn-info" onclick='r()' onfocus='this.blur()'>Reset</button>
+
+            <br><br>
+
+        	<input type='button' value="Start" class="btn btn-info" onclick="return changeStatus(this)" onfocus='this.blur()' id='Startbutton'/> 
+
+          <button type='button' class="btn btn-info" onclick='r()' onfocus='this.blur()'>Reset</button>
 
     
-            <br><br><br>
+          </div>
+          </div>
+
+        <div class="panel panel-info">
+        <div class="panel-heading">
 
             <form name="records" method="post">
                 <table class="table" >
@@ -191,6 +203,16 @@
                 <input type="hidden" name="name" value="your value"/>
                 <button type='button' class="btn btn-info" type="submit">Save</button>
             </form>
+
+        </div>
+        </div>
+        <!-- End of panel -->
+
+
+
+        </div>
+        </div>
+
         </ul>
     </div>
     <div class="col-sm-9 col-sm-offset-3 main">
@@ -200,6 +222,7 @@
         </ul>
 
         <div class="tab-content">
+
             <div id="form-defect" class="tab-pane fade in active">
                 <div class="alert alert-info">
                     <center><h1 class="page-header">Report Defect</h1></center>
@@ -213,9 +236,20 @@
                     </center>
                 </div>
             </div>
+
+
             <div id="table-history" class="tab-pane fade">
+                <div class="panel panel-info">
+                <div class="panel-heading">
                 <h3>The Defects You Found </h3>
+                </div>  
+                </div>
+
               {% for defect in defect_list %}
+
+                <div class="panel panel-info">
+                <div class="panel-heading">
+
                     <div class="list-group">
                       <a href="/tracker/{{ user.account.pk }}/defect/{{ defect.did }}" class="list-group-item">
                         <h3 class="list-group-item-heading">{{ defect.type }}</h3></br>
@@ -223,8 +257,13 @@
                         
                       </a>
                     </div>
+
+                </div>  
+                </div>
+
                 {% endfor %}
             </div>
+
         </div>  
     </div>
 </div>
