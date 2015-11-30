@@ -99,7 +99,7 @@
     }
     #disp {
 
-    	font-size: 1em;
+    	font-size: 2em;
     	width: 7.5em;
     	font-family: "Courier New";
     }
@@ -169,20 +169,27 @@
     <br><br><br>
     <div id='main' class="col-sm-3  sidebar">
         <ul class="nav nav-sidebar">
-            <li><h2>{{ active_iteration.phase.project.name}}</h2></li>
-            <li><h3>Active Iteration: {{ active_iteration.name}}</h3></li>
 
- 
-            <br>
-        	<input type='button' value="Start" class="btn btn-info" onclick="return changeStatus(this)" onfocus='this.blur()' id='Startbutton'/>
-            <br>
+
+          <div class="panel-group">
+            <div class="panel panel-info">
+              <div class="panel-heading"><li><h2>{{ active_iteration.phase.project.name}}</h2></li></div>
+              <div class="panel-heading"><li><h3>{{ active_iteration.name}}</h3></li></div>
+              <div class="panel-body">
+
+         
+
         	<input type='text' id='disp' />
-            <br>
-        	<button type='button' class="btn btn-info" onclick='r()' onfocus='this.blur()'>Reset</button>
 
-    
-            <br><br><br>
+            <br><br>
 
+        	<input type='button' value="Start" class="btn btn-info" onclick="return changeStatus(this)" onfocus='this.blur()' id='Startbutton'/> 
+
+          <button type='button' class="btn btn-info" onclick='r()' onfocus='this.blur()'>Reset</button>
+
+          <br><br><br>
+          
+          
             <form name="records" method="post">
                 <table class="table" >
                 	<tr><th>Record No.</th><th>Start Time</th><th>Ending Time</th></tr>
@@ -191,6 +198,15 @@
                 <input type="hidden" name="name" value="your value"/>
                 <button name= "submit_records"class="btn btn-info" type="submit" >Save</button>
             </form>
+
+
+        <!-- End of panel -->
+
+
+
+        </div>
+        </div>
+
         </ul>
     </div>
     <div class="col-sm-9 col-sm-offset-3 main">
@@ -200,6 +216,7 @@
         </ul>
 
         <div class="tab-content">
+
             <div id="form-defect" class="tab-pane fade in active">
                 <div class="alert alert-info">
                     <center><h1 class="page-header">Report Defect</h1></center>
@@ -213,9 +230,21 @@
                     </center>
                 </div>
             </div>
+
+
             <div id="table-history" class="tab-pane fade">
-                <h3>Your Defect Reports</h3>
-                {% for defect in defect_list %}
+                <div class="panel panel-info">
+                <div class="panel-heading">
+                <h3>Your Defect Reports </h3>
+                </div>  
+                </div>
+
+              {% for defect in defect_list %}
+
+                <div class="panel panel-info">
+                <div class="panel-heading">
+
+
                     <div class="list-group">
                       <a href="/tracker/{{ user.account.pk }}/defect/{{ defect.did }}" class="list-group-item">
                         <h3 class="list-group-item-heading">{{ defect.type }}</h3></br>
@@ -223,6 +252,10 @@
                         
                       </a>
                     </div>
+
+                </div>  
+                </div>
+
                 {% endfor %}
                 <br>
                 <h3>Your Working Time Records</h3>
@@ -237,6 +270,7 @@
                     </div>
                 {% endfor %}
             </div>
+
         </div>  
     </div>
 </div>
