@@ -257,9 +257,9 @@ class Phase(models.Model):
 class Iteration(models.Model):
     SLOC = models.IntegerField(default=0)
     iteration_id = models.AutoField(primary_key = True)
-    time_length = models.IntegerField(default=0)
-    status = models.IntegerField(default=0)
     name = models.CharField(max_length=100)
+    time_length = models.IntegerField(default=0)
+    status = models.IntegerField(default=0)    
     phase = models.ForeignKey(Phase)
        
     def __unicode__(self):

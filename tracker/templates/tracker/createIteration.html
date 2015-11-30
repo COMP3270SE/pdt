@@ -147,15 +147,15 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          {% if project %}
-          <a class="navbar-brand" href="#">{{ project.name }}</a>
-          {% endif %}
+            {% if project %}
+                <a class="navbar-brand" href="#">{{ project.name }}</a>
+            {% endif %}
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">            
             {% if user %}  
-            <li><a href="/tracker/manager/{{ user.account.pk }}/home">Home</a></li>
-            <li><a href="#">{{ user.account.username }}</a></li>
+                <li><a href="/tracker/manager/{{ user.account.pk }}/home">Home</a></li>
+                <li><a href="#">{{ user.account.username }}</a></li>
             {% endif %}
             <li><a href="#">Logout</a></li>
           </ul>
@@ -169,11 +169,10 @@
 
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li><a href="#">UP</a></li>
-            {% if project %}
-            <li><a href="/tracker/{{ project.manager.account.pk }}/project/{{ project.pk }}/people">People</a></li>
-            <li><a href="/tracker/{{ project.manager.account.pk }}/project/{{ project.pk }}/summary">Summary</a></li>
-            {% endif %}
+
+            
+            <li><a href="/tracker/{{ user.account.pk }}/project/{{ project.pk}}">Back</a></li>
+            
           </ul>
         </div>
 
@@ -184,12 +183,22 @@
             
 
 
-            <div class="container">
+          
             
-            Create iteration
+            
+              <div class="alert alert-info">
+                <center><h1 class="page-header">Create Iteration</h1></center>
+                <center>
+                  <form action="." method="POST">
+                    {% csrf_token %}
+                    {{ form.as_p }} 
 
+                  <input type="submit" value="Summit" />
+                  </form>
+                </center>
+              </div>
 
-            </div>
+          
             </div>
         </div>
       </div>
