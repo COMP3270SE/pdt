@@ -212,10 +212,11 @@ def createiteration(request, user_id, project_id):
 	user = get_object_or_404(Manager, account__pk = user_id)
 	if request.method == 'POST':
 		form = creIterationForm(request.POST)
-		iteration = form.save(commit=False)
-		iteration.SLOC=1000
-		iteration.status=0;
-		iteration.save()
+		if form.is_valid():
+			iteration = form.save(commit=False)
+			iteration.SLOC=1000
+			iteration.status=0;
+			iteration.save()
 		return HttpResponseRedirect('../')
 
 	form = creIterationForm()
