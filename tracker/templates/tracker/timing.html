@@ -8,8 +8,8 @@
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script type='text/javascript'>
 
-    // 0/1 = start/end
-    // 2 = state
+    // 0/1 = start/end time
+    // 2 = timing state
     // 3 = length, ms
     // 4 = timer
     // 5 = epoch
@@ -20,25 +20,14 @@
 
     function ss(){
         t[t[2]]=(new Date()).valueOf();
-        t[2]=1-t[2];
+        t[2]=1-t[2]; //switch state
 
-        if (0==t[2]) {
+        if (0==t[2]) { //pause
             clearInterval(t[4]);
             t[3]+=t[1]-t[0];
-            // var row=document.createElement('tr');
-            // var td=document.createElement('td');
-            // td.innerHTML=(t[7]++);// No.
-            // row.appendChild(td);
-            // td=document.createElement('td');
-            // td.innerHTML=format(t[0]);// start time
-            // row.appendChild(td);
-            // td=document.createElement('td');
-            // td.innerHTML=format(t[1]);// ending time
-            // row.appendChild(td);
-            // document.getElementById('lap').appendChild(row);
             t[4]=t[1]=t[0]=0;
             disp();
-        } else {
+        } else { //start
             t[4]=setInterval(disp, 43);
         }
     }
@@ -48,14 +37,14 @@
             sbutton.value="Pause";
         else sbutton.value="Resume";
     }
-    function r() {
-        document.getElementById('Startbutton').value="Start";
-    	if (t[2]) ss();
-    	t[4]=t[3]=t[2]=t[1]=t[0]=0;
-    	disp();
-    	document.getElementById('lap').innerHTML='';
-    	t[7]=1;
-    }
+    // function r() {//reset
+    //     document.getElementById('Startbutton').value="Start";
+    // 	if (t[2]) ss();
+    // 	t[4]=t[3]=t[2]=t[1]=t[0]=0;
+    // 	disp();
+    // 	document.getElementById('lap').innerHTML='';
+    // 	t[7]=1;
+    // }
 
     function disp() {
     	if (t[2]) t[1]=(new Date()).valueOf();
@@ -78,6 +67,7 @@
     	t[6]=document.getElementById('disp');
       t[8]=document.getElementById('total');
     	disp();
+      changeStatus();
     }
 
 
@@ -180,28 +170,15 @@
 
                 <br><br>
 
-            	<input type='button' value="Start" class="btn btn-info" onclick="return changeStatus(this)" onfocus='this.blur()' id='Startbutton'/> 
+            	<input type='button' value="Pause" class="btn btn-info" onclick="return changeStatus(this)" onfocus='this.blur()' id='Startbutton'/> 
 
-              <button type='button' class="btn btn-info" onclick='r()' onfocus='this.blur()'>Reset</button>
+              <!-- <button type='button' class="btn btn-info" onclick='r()' onfocus='this.blur()'>Reset</button> -->
           
               {% csrf_token %}
               <input type="hidden" name="interval" id="total"/>
               <button name= "submit_records"class="btn btn-info" type="submit" >Save</button>
           </form>
           
-          
-            <!-- <form name="records" method="post">
-                <table class="table" >
-                	<tr><th>Record No.</th><th>Start Time</th><th>Ending Time</th></tr>
-                	<tbody id='lap'></tbody>
-                </table>
-                
-                <button name= "submit_records"class="btn btn-info" type="submit" >Save</button>
-            </form> -->
-
-
-        <!-- End of panel -->
-
 
 
         </div>
