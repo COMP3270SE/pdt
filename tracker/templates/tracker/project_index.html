@@ -186,11 +186,13 @@
 
             <div class="container">
               <!-- Trigger the modal with a button -->
-              {% if active_iteration %}
               <button type="button" class="btn btn-lg btn-danger" data-toggle="modal" data-target="#myModal">Close Current Iteration</button>
-              {% elif is_opened_iteration %}
-              <button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#myModal">Start Iteration</button>
-              {% endif %}
+
+             <button type="button" class="btn btn-lg btn-success">Start the Iteration</button>
+
+
+
+
               <!-- Modal -->
               <div class="modal fade" id="myModal" role="dialog">
                 <div class="modal-dialog modal-sm">
@@ -247,7 +249,7 @@
 
 
 <div class="container">
-  <h2>Phase List</h2>
+  <!-- <h2>Phase List</h2> -->
   <div class="panel-group" id="accordion">
     <div class="panel panel-info">
       <div class="panel-heading">
