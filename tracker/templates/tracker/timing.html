@@ -30,10 +30,10 @@
             td.innerHTML=(t[7]++);// No.
             row.appendChild(td);
             td=document.createElement('td');
-            td.innerHTML=format(t[1]-t[0]);// time interval
+            td.innerHTML=format(t[0]);// start time
             row.appendChild(td);
             td=document.createElement('td');
-            td.innerHTML=format(t[3]);// total time
+            td.innerHTML=format(t[1]);// ending time
             row.appendChild(td);
             document.getElementById('lap').appendChild(row);
             t[4]=t[1]=t[0]=0;
@@ -86,23 +86,20 @@
 
     </script>
     <style type='text/css'>
-    #main button, #disp {
-  
-    	vertical-align: middle;
-    }
+
     #main button {
-        width: 6em;
+        width: 5em;
     	
-    	font-size: 1.5em;
+    	font-size: 1em;
     }
 
     #main input[type='button']{
-        font-size: 1.5em;
-        width:6em;
+        font-size: 1em;
+        width:5em;
     }
     #disp {
-    	background-color: white;
-    	font-size: 2em;
+
+    	font-size: 1em;
     	width: 7.5em;
     	font-family: "Courier New";
     }
@@ -111,7 +108,48 @@
     	text-align: center;
     	white-space: nowrap;
     }
+/*
+       * Sidebar
+       */
+      /* Hide for mobile, show later */
+      .sidebar {
+        display: none;
+      }
+      @media (min-width: 1000px) {
+        .sidebar {
+          position: fixed;
+          top: 51px;
+          bottom: 0;
+          left: 0;
+          z-index: 1000;
+          display: block;
+          padding: 20px;
+          overflow-x: hidden;
+          overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+          background-color: #f5f5f5;
+          border-right: 1px solid #eee;
+        }
+      }
 
+      /* Sidebar navigation */
+      .nav-sidebar {
+        margin-right: -21px; /* 20px padding + 1px border */
+        margin-bottom: 20px;
+        margin-left: -20px;
+      }
+      .nav-sidebar > li > a {
+        padding-right: 20px;
+        padding-left: 20px;
+      }
+      .nav-sidebar > .active > a,
+      .nav-sidebar > .active > a:hover,
+      .nav-sidebar > .active > a:focus {
+        color: #fff;
+        background-color: #428bca;
+      }
+      .nav-tabs>li {
+        float: right;
+    }
 
     #lap {
     	margin-top: 0.5em;
@@ -121,31 +159,64 @@
 
 <body onload='load();'>
 
-
-<div id='main'>
     <nav class="navbar navbar-inverse navbar-fixed-top">
-        <a class="navbar-brand" >Timer</a>
-        <ul class="nav navbar-nav navbar-right">
-        <a class="navbar-brand" >Home</a>
-        <li><button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Logout</button></li>
-        </ul>
+            <a class="navbar-brand" >Welcome, {{developer.account.username}}! Let's start working!</a>
+            <ul class="nav navbar-nav navbar-right">
+            <a class="navbar-brand" href="/tracker/developer/{{ developer.account.pk }}/home">Home</a>
+            <li><button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Logout</button></li>
+            </ul>
     </nav>
     <br><br><br>
-    <h1>Let's start working!</h1>
-    <br>
-	<input type='button' value="Start" class="btn btn-info" onclick="return changeStatus(this)" onfocus='this.blur()' id='Startbutton'/>
-	<input type='text' id='disp' />
-	<button type='button' class="btn btn-info" onclick='r()' onfocus='this.blur()'>Reset</button>
+    <div id='main' class="col-sm-3  sidebar">
+        <ul class="nav nav-sidebar">
+            <li><p2>{{ active_iteration.phase.project.name}}</p2></li>
+
+ 
+            <br>
+        	<input type='button' value="Start" class="btn btn-info" onclick="return changeStatus(this)" onfocus='this.blur()' id='Startbutton'/>
+            <br>
+        	<input type='text' id='disp' />
+            <br>
+        	<button type='button' class="btn btn-info" onclick='r()' onfocus='this.blur()'>Reset</button>
+
+    
+            <br><br><br>
+
+            <form name="records" method="post">
+                <table class="table" >
+                	<tr><th>Record No.</th><th>Start Time</th><th>Ending Time</th></tr>
+                	<tbody id='lap'></tbody>
+                </table>
+                <input type="hidden" name="name" value="your value"/>
+                <button type='button' class="btn btn-info" type="submit">Save</button>
+            </form>
+        </ul>
+    </div>
+    <div class="col-sm-9 col-sm-offset-3 main">
+        <ul class="nav nav-tabs" align="middle">
+          <li role="presentation" class="active"><a id="coursetab" href="#form-defect" aria-controls="form-defect" role="tab" data-toggle="tab">Create A Defect Report</a></li>
+          <li role="presentation"><a id="skilltab" href="#table-history" aria-controls="table-history" role="tab" data-toggle="tab">Manage My History</a></li>  
+        </ul>
+
+        <div class="tab-content">
+            <div id="form-defect" class="tab-pane fade in active">
+              <h3>HOME</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </div>
+            <div id="table-history" class="tab-pane fade">
+              {% for defect in defect_list %}
+                    <div class="list-group">
+                      <a href="/tracker/{{ user.account.pk }}/defect/{{ defect.did }}" class="list-group-item">
+                        <h3 class="list-group-item-heading">{{ defect.type }}</h3></br>
+                        <p class="list-group-item-text">{{ defect.description }}</p>
+                        
+                      </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>  
+    </div>
 </div>
-    <br><br><br>
-    <form name="records" method="post">
-        <table class="table" >
-        	<tr><th>Lap #</th><th>This Lap</th><th>Running Total</th></tr>
-        	<tbody id='lap'></tbody>
-        </table>
-        <input type="hidden" name="name" value="your value"/>
-        <button type='button' class="btn btn-info" type="submit">Save</button>
-    </form>
 
 <script type="text/javascript">
 var _gaq = _gaq || [];
@@ -164,21 +235,23 @@ document.documentElement.firstChild.appendChild(ga);
               <div id="myModal" class="modal fade" role="dialog">
                 <div class="modal-dialog">
 
-                  <!-- Modal content-->
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal">&times;</button>
-                      <h4 class="modal-title">Warm reminding</h4>
-                    </div>
-                    <div class="modal-body">
-                      <p>Are you sure to logout without submitting time record?</p>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                      <button type="button" class="btn btn-danger" data-dismiss="modal">Close anyway</button>
-                    </div>
-                  </div>
+       
 
+                          <!-- Modal content-->
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal">&times;</button>
+                              <h4 class="modal-title">Warm reminding</h4>
+                            </div>
+                            <div class="modal-body">
+                              <p>Are you sure to logout without submitting time record?</p>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                              <button type="button" class="btn btn-danger" data-dismiss="modal">Close anyway</button>
+                            </div>
+                          </div>
+               
                 </div>
               </div>
 

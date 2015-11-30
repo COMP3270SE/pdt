@@ -144,7 +144,7 @@
             <span class="icon-bar"></span>
           </button>
           {% if user %}
-          <a class="navbar-brand" href="/tracker/{{ user.uid }}/home">Home</a>
+          <a class="navbar-brand" href="/tracker/manager/{{ user.account.pk }}/home">Home</a>
           {% else %}
           <a class="navbar-brand" href="#">Home</a>
           {% endif %}
@@ -152,7 +152,7 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">                    
             {% if user %}  
-            <li><a href="/tracker/{{ user.uid }}/home">{{ user.name }}</a></li>
+            <li><a href="/tracker/manager/{{ user.account.pk }}/home">{{ user.account.username }}</a></li>
             {% endif %}            
             <li><a href="#">Logout</a></li>
           </ul>

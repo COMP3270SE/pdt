@@ -200,7 +200,7 @@
             <!-- Developer can choose a project to work on-->
                 {% for project in project_list %}
                 <div class="list-group">
-                  <a href="/tracker/{{ user.account.pk }}/workonproject/{{ project.pid }}" class="list-group-item">
+                  <a href="/tracker/{{ user.account.pk }}/workonproject/{{ project.pid }}/timing" class="list-group-item">
                     <h3 class="list-group-item-heading">{{ project.name }}</h3></br>
                     <p class="list-group-item-text">{{ project.description }}</p>
                     <p class="list-group-item-text" ><b>Project Manager: {{ project.manager.account.username }}</b></p>

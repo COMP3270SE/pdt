@@ -49,7 +49,7 @@ def userlogin(request):
             print HttpResponse('Incorrect username or password.')
     return render(request, 'tracker/login.html', {})
        
-@login_required
+@login_required(login_url='/tracker')
 def developerhome(request, user_id):
 
         try:
@@ -63,7 +63,7 @@ def developerhome(request, user_id):
             'isManager': False
             })
 
-@login_required
+@login_required(login_url='/tracker')
 def managerhome(request, user_id):
         try:
             user = get_object_or_404(Manager, account__pk = user_id)
@@ -80,13 +80,14 @@ class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
         fields = ['name', 'description', 'manager', 'developer', 'est_SLOC', 'est_escape']
-    
+
+@login_required(login_url='/tracker')   
 def createproject(request, user_id):
 	if request.method == 'POST':
 		form = ProjectForm(request.POST)
 		if form.is_valid():
 			form.save()
-			return HttpResponseRedirect('/tracker/'+user_id+'/home/')
+			return HttpResponseRedirect('/tracker/manager/'+user_id+'/home/')
 
 	form = ProjectForm()
 	user = get_object_or_404(Manager, account__pk = user_id)
@@ -95,7 +96,7 @@ def createproject(request, user_id):
     	'user': user
     	})
 
-@login_required
+@login_required(login_url='/tracker')
 def viewproject(request, user_id, project_id):
 	user = get_object_or_404(Manager, account__pk = user_id)
 	project = get_object_or_404(Project, pk = project_id)
@@ -136,7 +137,7 @@ def changeItState(request, user_id, project_id, iteration_id):
 
         return render_to_response('tracker/project_index.html',{'form':it_form}, context_instance=RequestContext(request))
 
-@login_required
+@login_required(login_url='/tracker')
 def summary(request, user_id, project_id):
 		manager = get_object_or_404(Manager, account__pk = user_id)
 		project = get_object_or_404(Project, pk = project_id)
@@ -153,13 +154,14 @@ def summary(request, user_id, project_id):
 def timing(request, user_id, project_id):
     developer = get_object_or_404(Developer, account__pk = user_id)
     active_iteration = get_object_or_404(Iteration, status = 1, phase__project__pk = project_id)
-
+    defect_list = Defect.objects.filter(in_iteration__phase__project__pk = project_id)
     return render(request, 'tracker/timing.html', {
         'developer': developer, 
         'active_iteration': active_iteration, 
+        'defect_list': defect_list,
         })
 
-@login_required
+@login_required(login_url='/tracker')
 def people(request, user_id, project_id):
 	project = get_object_or_404(Project, pk = project_id)
 	user = get_object_or_404(Manager, account__pk = user_id)

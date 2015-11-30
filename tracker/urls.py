@@ -1,8 +1,8 @@
 # === Manager ===
-# tracker/500000000/home.html
-# tracker/500000000/project/1/process.html
-# tracker/500000000/project/1/people.html
-# tracker/500000000/project/1/summary.html
+# tracker/20/home.html
+# tracker/20/project/1/process.html
+# tracker/20/project/1/people.html
+# tracker/20/project/1/summary.html
 
 # === Developer ===
 # tracker/100000000/home.html
@@ -27,27 +27,27 @@ urlpatterns = [
     url(r'^developer/(?P<user_id>[0-9]+)/home/$', views.developerhome, name='developerhome'),
 
 ############### manager ############
-    # http://localhost:8000/tracker/50000000/createproject/
-    url(r'^(?P<user_id>[0-9]{8})/createproject/$', views.createproject, name='createproject'),
-    # http://localhost:8000/tracker/50000000/project/1/
+    # http://localhost:8000/tracker/2/createproject/
+    url(r'^(?P<user_id>[0-9]+)/createproject/$', views.createproject, name='createproject'),
+    # http://localhost:8000/tracker/2/project/1/
     url(r'^(?P<user_id>[0-9]+)/project/(?P<project_id>[0-9]+)/$', views.viewproject, name='viewproject'),
-    # http://localhost:8000/tracker/50000000/project/1/people/
+    # http://localhost:8000/tracker/2/project/1/people/
     url(r'^(?P<user_id>[0-9]+)/project/(?P<project_id>[0-9]+)/people/$', views.people, name='people'),
-    # http://localhost:8000/tracker/50000000/project/1/summary/
+    # http://localhost:8000/tracker/2/project/1/summary/
     url(r'^(?P<user_id>[0-9]+)/project/(?P<project_id>[0-9]+)/summary/$', views.summary, name='summary'),
 
 ############### developer #############
-    # http://localhost:8000/tracker/Defect/50000000/home/
+    # http://localhost:8000/tracker/Defect/2/home/
     url(r'^Defect/(?P<defect_id>[0-9]+)/$', views.showDefect, name='showdefect'),
 
     url(r'^(?P<user_id>[0-9]+)/workonproject/(?P<project_id>[0-9]+)/timing/$', views.timing, name='timing'),
     url(r'^(?P<user_id>[0-9]+)/workonproject/(?P<project_id>[0-9]+)/$', views.workonproject, name='workonproject'),
 
-    # http://localhost:8000/tracker/50000000/reportdefect/
+    # http://localhost:8000/tracker/2/reportdefect/
     url(r'^(?P<id>[0-9]{8})/reportdefect/$', views.reportDefect, name='reportdefect'),
     
    
-    # http://localhost:8000/tracker/50000000/project/1/
+    # http://localhost:8000/tracker/2/project/1/
     url(r'^(?P<user_id>[0-9]{8})/project/(?P<project_id>[0-9]+)/$', views.index, name='index'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
