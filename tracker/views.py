@@ -150,6 +150,10 @@ def summary(request, user_id, project_id):
 			'phase_list': phase_list
 			})
 
+class DefectForm(forms.ModelForm):
+    class Meta:
+        model = Defect
+        fields = ['type', 'description', 'injection_iteration']
 @login_required(login_url='/tracker')
 def timing(request, user_id, project_id):
     developer = get_object_or_404(Developer, account__pk = user_id)
@@ -193,23 +197,32 @@ def people(request, user_id, project_id):
 		'project': project
 		})
 
-class DefectForm(forms.ModelForm):
-    class Meta:
-        model = Defect
-        fields = ['type', 'description', 'injection_iteration']
-    
-def reportDefect(request, user_id, project_id):
-    if request.method == 'POST':
-        form = DefectForm(request.POST)
-        if form.is_valid():
-            new_defect = form.save(commit=False)
-            new_defect.removal_iteration=get_object_or_404(Iteration, status = 1, phase__project__pk = project_id)
-            new_defect.developer=get_object_or_404(Developer, account__pk = user_id)
-            new_defect.save()
-            return HttpResponseRedirect('Defect/' + str(new_defect.pk))
+class creIterationForm(forms.ModelForm):
+	class Meta:
+		model = Iteration
+		fields = ['name','time_length', 'phase']
 
-    form = DefectForm()
-    return render(request, 'tracker/reportdefect.html', {'form': form})
+class modIterationForm(forms.ModelForm):
+	class Meta:
+		model = Iteration
+		fields = '__all__'
+    
+def createiteration(request, user_id, project_id):
+	project = get_object_or_404(Project, pk = project_id)
+	user = get_object_or_404(Manager, account__pk = user_id)
+	if request.method == 'POST':
+		form = creIterationForm(request.POST)
+		iteration = form.save(commit=False)
+		iteration.SLOC=1000
+		iteration.status=0;
+		iteration.save()
+		return HttpResponseRedirect('../')
+
+	form = creIterationForm()
+	return render(request, 'tracker/createiteration.html', {
+		'user':user,
+		'project':project,
+		'form': form})
 
 def showDefect(request, defect_id):
 	return render(request, 'tracker/showdefect.html', {})
