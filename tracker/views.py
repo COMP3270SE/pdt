@@ -171,10 +171,10 @@ def timing(request, user_id, project_id):
                 new_defect.save()
                 messages.success(request, 'Defect report saved.')
                 #return HttpResponseRedirect('Defect/' + str(new_defect.pk))
-        elif 'submit_records' in request.POST:
-            starttime=request.POST['starttime']
-            endtime = request.POST['endtime']
-            new_record= Workrecord.create(starttime, endtime, developer, active_iteration)
+        elif 'interval' in request.POST:
+            interval=request.POST['interval']
+            new_record= Workrecord.create(interval, developer, active_iteration)
+            new_record.save()
 
     defect_form = DefectForm()
 

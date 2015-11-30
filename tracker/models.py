@@ -369,20 +369,25 @@ class Defect(models.Model):
         return str(self.did)+"-"+str(self.type)+": injection-"+str(self.injection_iteration)+", removal-"+str(self.removal_iteration)
 
 class Workrecord(models.Model):
-    wid = models.IntegerField(default=0, primary_key=True)
-    starttime = models.DateTimeField(default=datetime.datetime.now, blank=True)
-    endtime = models.DateTimeField(default=datetime.datetime.now, blank=True)
+    wid = models.AutoField(primary_key=True)
+    #starttime = models.DateTimeField(default=datetime.datetime.now, blank=True)
+    #endtime = models.DateTimeField(default=datetime.datetime.now, blank=True)
+    interval = models.FloatField(default=0.0)
     developer = models.ForeignKey(Developer)
     iteration = models.ForeignKey(Iteration)
     def __unicode__(self):
         return str(self.wid)+"by"+str(self.developer.account.username)
     
     @classmethod
-    def create(cls, starttime, endtime, developer, iteration):
-        book = cls(title=title, starttime= starttime, endtime= endtime, developer= developer, iteration= iteration)
+    def create(cls, interval, developer, iteration):
+        book = cls(interval=interval, developer= developer, iteration= iteration)
         return book
 
     @property
     def duration(self):
-        return (self.endtime-self.starttime).total_seconds()/3600
-        #return (self.endtime-self.starttime).days
+        #return (self.endtime-self.starttime).total_seconds()/3600
+        return  self.interval
+
+
+
+

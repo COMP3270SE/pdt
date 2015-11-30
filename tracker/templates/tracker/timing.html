@@ -16,7 +16,7 @@
     // 6 = disp el
     // 7 = lap count
 
-    var t=[0, 0, 0, 0, 0, 0, 0, 1];
+    var t=[0, 0, 0, 0, 0, 0, 0, 1, 0];
 
     function ss(){
         t[t[2]]=(new Date()).valueOf();
@@ -25,17 +25,17 @@
         if (0==t[2]) {
             clearInterval(t[4]);
             t[3]+=t[1]-t[0];
-            var row=document.createElement('tr');
-            var td=document.createElement('td');
-            td.innerHTML=(t[7]++);// No.
-            row.appendChild(td);
-            td=document.createElement('td');
-            td.innerHTML=format(t[0]);// start time
-            row.appendChild(td);
-            td=document.createElement('td');
-            td.innerHTML=format(t[1]);// ending time
-            row.appendChild(td);
-            document.getElementById('lap').appendChild(row);
+            // var row=document.createElement('tr');
+            // var td=document.createElement('td');
+            // td.innerHTML=(t[7]++);// No.
+            // row.appendChild(td);
+            // td=document.createElement('td');
+            // td.innerHTML=format(t[0]);// start time
+            // row.appendChild(td);
+            // td=document.createElement('td');
+            // td.innerHTML=format(t[1]);// ending time
+            // row.appendChild(td);
+            // document.getElementById('lap').appendChild(row);
             t[4]=t[1]=t[0]=0;
             disp();
         } else {
@@ -60,6 +60,7 @@
     function disp() {
     	if (t[2]) t[1]=(new Date()).valueOf();
     	t[6].value=format(t[3]+t[1]-t[0]);
+      t[8].value=t[3]+t[1]-t[0];
     }
     function format(ms) {
     	// used to do a substr, but whoops, different browsers, different formats
@@ -75,12 +76,8 @@
     function load() {
     	t[5]=new Date(1970, 1, 1, 0, 0, 0, 0).valueOf();
     	t[6]=document.getElementById('disp');
-
+      t[8]=document.getElementById('total');
     	disp();
-
-    	if (!window.opener && window==window.top) {
-    		document.getElementById('remote').style.visibility='visible';
-    	}
     }
 
 
@@ -178,26 +175,29 @@
               <div class="panel-body">
 
          
+          <form name="records" method="post">
+            	<input type='text' id='disp'/>
 
-        	<input type='text' id='disp' />
+                <br><br>
 
-            <br><br>
+            	<input type='button' value="Start" class="btn btn-info" onclick="return changeStatus(this)" onfocus='this.blur()' id='Startbutton'/> 
 
-        	<input type='button' value="Start" class="btn btn-info" onclick="return changeStatus(this)" onfocus='this.blur()' id='Startbutton'/> 
-
-          <button type='button' class="btn btn-info" onclick='r()' onfocus='this.blur()'>Reset</button>
-
-          <br><br><br>
+              <button type='button' class="btn btn-info" onclick='r()' onfocus='this.blur()'>Reset</button>
+          
+              {% csrf_token %}
+              <input type="hidden" name="interval" id="total"/>
+              <button name= "submit_records"class="btn btn-info" type="submit" >Save</button>
+          </form>
           
           
-            <form name="records" method="post">
+            <!-- <form name="records" method="post">
                 <table class="table" >
                 	<tr><th>Record No.</th><th>Start Time</th><th>Ending Time</th></tr>
                 	<tbody id='lap'></tbody>
                 </table>
-                <input type="hidden" name="name" value="your value"/>
+                
                 <button name= "submit_records"class="btn btn-info" type="submit" >Save</button>
-            </form>
+            </form> -->
 
 
         <!-- End of panel -->
@@ -241,8 +241,7 @@
 
               {% for defect in defect_list %}
 
-                <div class="panel panel-info">
-                <div class="panel-heading">
+               
 
 
                     <div class="list-group">
@@ -253,8 +252,6 @@
                       </a>
                     </div>
 
-                </div>  
-                </div>
 
                 {% endfor %}
                 <br>
