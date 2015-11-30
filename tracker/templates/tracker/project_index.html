@@ -228,7 +228,7 @@
             </form>
 
 
-    <div class="panel panel-success">
+<!--     <div class="panel panel-success">
       <div class="panel-heading"><h2>Phase List</h2></div>
       <div class="panel-body">
             
@@ -241,15 +241,22 @@
             {% endfor %}
 
       </div>
-      </div>
+      </div> -->
 
             <hr>
 
-            <!-- <h2>Iteration List</h2> -->
 
-            <button type="button" class="btn btn-lg btn-info" data-toggle="collapse" data-target="#demo">
-            <h3>Iteration List</h3></button>
-            <div id="demo" class="collapse">
+<div class="container">
+  <h2>Phase List</h2>
+  <div class="panel-group" id="accordion">
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Inception Phase</a>
+        </h4>
+      </div>
+      <div id="collapse1" class="panel-collapse collapse in">
+        <div class="panel-body">
 
             {% for iteration in iteration_list1 %}
                 <div class="list-group">
@@ -260,6 +267,21 @@
                   </a>
                 </div>
             {% endfor %}
+
+
+        </div>
+      </div>
+    </div>
+    
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Elaboration Phase</a>
+        </h4>
+      </div>
+      <div id="collapse2" class="panel-collapse collapse">
+        <div class="panel-body">
+
             {% for iteration in iteration_list2 %}
                 <div class="list-group">
                   <a href="#" class="list-group-item">
@@ -269,6 +291,20 @@
                   </a>
                 </div>
             {% endfor %}
+
+        </div>
+      </div>
+    </div>
+
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Construction Phase</a>
+        </h4>
+      </div>
+      <div id="collapse3" class="panel-collapse collapse">
+        <div class="panel-body">
+
             {% for iteration in iteration_list3 %}
                 <div class="list-group">
                   <a href="#" class="list-group-item">
@@ -278,6 +314,20 @@
                   </a>
                 </div>
             {% endfor %}
+
+
+        </div>
+      </div>
+
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapse4">Transition Phase</a>
+        </h4>
+      </div>
+      <div id="collapse4" class="panel-collapse collapse">
+        <div class="panel-body">
+
             {% for iteration in iteration_list4 %}
                 <div class="list-group">
                   <a href="#" class="list-group-item">
@@ -288,8 +338,12 @@
                 </div>
             {% endfor %}
 
+        </div>
+      </div>
 
-
+    </div>
+  </div> 
+</div>
 
 
             </div>
