@@ -192,27 +192,40 @@
 
               <!-- Modal -->
               <div class="modal fade" id="myModal" role="dialog">
-                <div class="modal-dialog modal-sm">
+                <div class="modal-dialog">
+
                   <div class="modal-content">
                     <div class="modal-header">
                       <button type="button" class="close" data-dismiss="modal">&times;</button>
                       <h3 class="modal-title">Warning!</h3>
                     </div>
-                    <div class="modal-body">
-                      <p>Do you really want to close current iteration?</p>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
-                      <form
-                      <button type="button" class="btn btn-default" data-dismiss="modal" onclick="closeIteration()">Yes</button>
-                    </div>
+
+                    <form class="form-horizontal" role="form" method="post" action=".">
+                      <div id="modal_close_it"class="modal-body">
+                        <h4>Do you really want to close current iteration?</h4>
+                        <h4>If yes, please fill in fllowing form for current iteration: </h4><br>
+                          {% if active_iteration %}
+                          <h4>{{ active_iteration.name }}</h4>
+                          <input id="iteration_id" type="hidden" name="iteration_id" value="{{ active_iteration.pk }}" />
+                          {% endif %}
+                          <p><label for="SLOC">SLOC:</label>
+                              <input id="SLOC" type="text" name="SLOC" maxlength="100" /></p>
+                          <p><label for="time_length">Duration:</label>
+                              <input id="time_length" type="text" name="time_length"/></p>                     
+                          {% csrf_token %}
+                          {{ it_form.as_p }}
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Submit</button>
+                      </div>
+                    </form>
                   </div>
+
                 </div>
               </div>
 
             </div>
-
-
 
 
             <form class="form-horizontal" role="form" method="post" action=".">
@@ -366,12 +379,5 @@
     <!--<script src="{% static 'assets/js/vendor/holder.min.js' %}"></script>-->
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <!--<script src="{% static 'assets/js/ie10-viewport-bug-workaround.js' %}"></script>-->
-    <script type="text/javascript">
-    function closeIteration() {
-        document.getElementById("close_iteration").innerHTML = "Hello World";
-
-
-    }
-    </script>
   </body>
 </html>

@@ -119,22 +119,23 @@ def viewproject(request, user_id, project_id):
 class IterationForm(forms.ModelForm):
 	class Meta:
 		model = Iteration
-		fields = ['iteration_id', 'status']
+		fields = ['SLOC', 'time_length']
 
-def changeItState(request, user_id, project_id, iteration_id):
+def closeIteration(request, user_id, project_id, iteration_id):
 	if request.method == 'POST':
 		it_form = IterationForm(request.POST)
 
-	if it_form.is_valid():
-		iteration = Iteration.objects.get(pk=iteration_id)
-		it_form = IterationForm(request.POST, instance = iteration)
-		it_form.save()
-		return HttpResponseRedirect('/tracker/'+user_id+'/project/'+project_id)
-	else:
-		iteration = Iteration.objects.get(pk = iteration_id)       
-		it_form = Iteration(instance=iteration)
+		if it_form.is_valid():
+			iteration = Iteration.objects.get(pk=iteration_id)
+			it_form = IterationForm(request.POST, instance = iteration)
+			it_form.save(commit.False)
+			return HttpResponseRedirect('/tracker/'+user_id+'/project/'+project_id)
+		else:
+			iteration = Iteration.objects.get(pk = iteration_id)       
+			it_form = Iteration(instance=iteration)
 
-        return render_to_response('tracker/project_index.html',{'form':it_form}, context_instance=RequestContext(request))
+	it_form = IterationForm()
+	return render_to_response('tracker/project_index.html',{'form':it_form})
 
 @login_required(login_url='/tracker')
 def summary(request, user_id, project_id):
