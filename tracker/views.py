@@ -7,6 +7,7 @@ from django.template.context_processors import csrf
 
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 from .models import Project, Developer, Manager
 from .models import Phase, Iteration, Defect
@@ -160,12 +161,14 @@ def timing(request, user_id, project_id):
 
     if request.method == 'POST':
         defect_form = DefectForm(request.POST)
-        if defect_form.is_valid():
-            new_defect = defect_form.save(commit=False)
-            new_defect.removal_iteration=get_object_or_404(Iteration, status = 1, phase__project__pk = project_id)
-            new_defect.developer=get_object_or_404(Developer, account__pk = user_id)
-            new_defect.save()
-            return HttpResponseRedirect('Defect/' + str(new_defect.pk))
+        if 'submit_defect' in request.POST:
+            if defect_form.is_valid():
+                new_defect = defect_form.save(commit=False)
+                new_defect.removal_iteration=get_object_or_404(Iteration, status = 1, phase__project__pk = project_id)
+                new_defect.developer=get_object_or_404(Developer, account__pk = user_id)
+                new_defect.save()
+                messages.success(request, 'Defect report saved.')
+                #return HttpResponseRedirect('Defect/' + str(new_defect.pk))
 
     defect_form = DefectForm()
 
