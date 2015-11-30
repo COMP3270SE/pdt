@@ -133,9 +133,9 @@
 
       /* Sidebar navigation */
       .nav-sidebar {
-        margin-right: -21px; /* 20px padding + 1px border */
+
         margin-bottom: 20px;
-        margin-left: -20px;
+        margin-left: -10px;
       }
       .nav-sidebar > li > a {
         padding-right: 20px;
@@ -169,7 +169,8 @@
     <br><br><br>
     <div id='main' class="col-sm-3  sidebar">
         <ul class="nav nav-sidebar">
-            <li><p2>{{ active_iteration.phase.project.name}}</p2></li>
+            <li><h2>{{ active_iteration.phase.project.name}}</h2></li>
+            <li><h3>Active Iteration: {{ active_iteration.name}}</h3></li>
 
  
             <br>
@@ -200,10 +201,20 @@
 
         <div class="tab-content">
             <div id="form-defect" class="tab-pane fade in active">
-              <h3>HOME</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                <div class="alert alert-info">
+                    <center><h1 class="page-header">Report Defect</h1></center>
+                    <center>
+                      <form action="." method="POST">
+                        {% csrf_token %}
+                        {{ defect_form.as_p }} 
+
+                      <input type="submit" value="Summit" />
+                      </form>
+                    </center>
+                </div>
             </div>
             <div id="table-history" class="tab-pane fade">
+                <h3>The Defects You Found </h3>
               {% for defect in defect_list %}
                     <div class="list-group">
                       <a href="/tracker/{{ user.account.pk }}/defect/{{ defect.did }}" class="list-group-item">

@@ -79,19 +79,21 @@ def managerhome(request, user_id):
 class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
-        fields = ['name', 'description', 'manager', 'developer', 'est_SLOC', 'est_escape']
+        fields = ['name', 'description', 'developer', 'est_SLOC', 'est_escape']
 
 @login_required(login_url='/tracker')   
 def createproject(request, user_id):
-	if request.method == 'POST':
-		form = ProjectForm(request.POST)
-		if form.is_valid():
-			form.save()
-			return HttpResponseRedirect('/tracker/manager/'+user_id+'/home/')
+    if request.method == 'POST':
+        form = ProjectForm(request.POST)
+        if form.is_valid():
+            project = form.save(commit=False)
+            project.manager= get_object_or_404(Manager, account__pk = user_id)
+            project.save()
+            return HttpResponseRedirect('/tracker/manager/'+user_id+'/home/')
 
-	form = ProjectForm()
-	user = get_object_or_404(Manager, account__pk = user_id)
-	return render(request, 'tracker/createproject.html', {
+    form = ProjectForm()
+    user = get_object_or_404(Manager, account__pk = user_id)
+    return render(request, 'tracker/createproject.html', {
     	'form': form,
     	'user': user
     	})
@@ -154,11 +156,24 @@ def summary(request, user_id, project_id):
 def timing(request, user_id, project_id):
     developer = get_object_or_404(Developer, account__pk = user_id)
     active_iteration = get_object_or_404(Iteration, status = 1, phase__project__pk = project_id)
-    defect_list = Defect.objects.filter(in_iteration__phase__project__pk = project_id)
+    defect_list = Defect.objects.filter(injection_iteration__phase__project__pk = project_id)
+
+    if request.method == 'POST':
+        defect_form = DefectForm(request.POST)
+        if defect_form.is_valid():
+            new_defect = defect_form.save(commit=False)
+            new_defect.removal_iteration=get_object_or_404(Iteration, status = 1, phase__project__pk = project_id)
+            new_defect.developer=get_object_or_404(Developer, account__pk = user_id)
+            new_defect.save()
+            return HttpResponseRedirect('Defect/' + str(new_defect.pk))
+
+    defect_form = DefectForm()
+
     return render(request, 'tracker/timing.html', {
         'developer': developer, 
         'active_iteration': active_iteration, 
         'defect_list': defect_list,
+        'defect_form': defect_form,
         })
 
 @login_required(login_url='/tracker')
@@ -175,14 +190,17 @@ def people(request, user_id, project_id):
 class DefectForm(forms.ModelForm):
     class Meta:
         model = Defect
-        fields = ['type', 'description', 'in_iteration', 'out_iteration', 'developer']
+        fields = ['type', 'description', 'injection_iteration']
     
-def reportDefect(request, id):
+def reportDefect(request, user_id, project_id):
     if request.method == 'POST':
         form = DefectForm(request.POST)
         if form.is_valid():
-            new_defect = form.save()
-            return HttpResponseRedirect('/tracker/Defect/' + str(new_defect.pk))
+            new_defect = form.save(commit=False)
+            new_defect.removal_iteration=get_object_or_404(Iteration, status = 1, phase__project__pk = project_id)
+            new_defect.developer=get_object_or_404(Developer, account__pk = user_id)
+            new_defect.save()
+            return HttpResponseRedirect('Defect/' + str(new_defect.pk))
 
     form = DefectForm()
     return render(request, 'tracker/reportdefect.html', {'form': form})
