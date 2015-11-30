@@ -193,9 +193,9 @@
                 <tr>
                   <td>{{ iteration.name }}</td>
                   <td>{{ iteration.phase }}</td>
-                  <td>{{ iteration.SLOC }}</td>
-                  <td>{{ iteration.effort }}</td>
-                  <td>{{ iteration.SLOC_effort }}</td>
+                  <td>{{ iteration.SLOC }} | {{ iteration.SLOC_percent }}%</td>
+                  <td>{{ iteration.effort }} | {{ iteration.effort_percent }}%</td>
+                  <td>{{ iteration.SLOC_effort }} | {{ iteration.SLOC_effort_percent }}%</td>
                 </tr>
                 {% endfor %}
               </tbody>
@@ -218,9 +218,9 @@
                 {% for phase in phase_list %}
                 <tr>
                   <td>{{ phase.type }}</td>
-                  <td>{{ phase.SLOC.sum }}</td>
-                  <td>{{ phase.effort }}</td>
-                  <td>{{ phase.SLOC_effort }}</td>
+                  <td>{{ phase.SLOC.sum }} | {{ phase.SLOC_percent }}%</td>
+                  <td>{{ phase.effort }} | {{ phase.effort_percent }}%</td>
+                  <td>{{ phase.SLOC_effort }} | {{ phase.SLOC_effort_percent }}%</td>
                 </tr>
                 {% endfor %}
               </tbody>
@@ -233,7 +233,7 @@
             <table class="table table-bordered">
               <thead>
                 <tr>
-                  <th>SLOC</th>
+                  <th>SLOC </th>
                   <th>Effort (person hour)</th>
                   <th>SLOC (per person hour)</th>
                 </tr>
@@ -242,9 +242,9 @@
                 <!-- 1 project -->
                 <tr>
                   {% if project %}
-                  <td>{{ pro.SLOC.sum }}</td>                  
-                  <td>{{ pro.effort }}</td>
-                  <td>{{ pro.SLOC_effort }}</td>
+                  <td>{{ project.SLOC.sum }} | {{ project.SLOC_percent }}%</td>                  
+                  <td>{{ project.effort }} | {{ project.effort_percent }}%</td>
+                  <td>{{ project.SLOC_effort }} | {{ project.SLOC_effort_percent }}%</td>
                   {% endif %}
                 </tr>
                 
