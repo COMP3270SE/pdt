@@ -50,6 +50,7 @@ class Project(models.Model):
     developer = models.ManyToManyField(Developer)
     est_SLOC = models.IntegerField(default=0)
     est_escape = models.FloatField(default=0.0)
+    est_effort = models.FloatField(default=0.0)
 
     def __unicode__(self):
         return self.name
@@ -60,6 +61,13 @@ class Project(models.Model):
         return iteration_list.aggregate(sum = Sum('SLOC'))
 
     @property
+    def SLOC_percent(self):
+        divider = self.est_SLOC;
+        if divider == 0:
+            return "NA"
+        return round(100*self.SLOC['sum']/divider, 2)
+
+    @property
     def effort(self):
         phase_list = Phase.objects.filter(project=self)
         effort = 0
@@ -68,11 +76,27 @@ class Project(models.Model):
         return round(effort, 2)
 
     @property
+    def effort_percent(self):
+        divider = self.est_effort;
+        if divider == 0:
+            return "NA"
+        return round(100*self.effort/divider, 2)
+
+    @property
     def SLOC_effort(self):
         divider = self.effort
         if divider == 0:
             return "NA"
         return round(self.SLOC['sum']/divider, 2)
+
+    @property
+    def SLOC_effort_percent(self):
+        if self.est_effort == 0:
+            return "NA"
+        divider = self.est_SLOC/self.est_effort;
+        if divider == 0:
+            return "NA"
+        return round(100*self.SLOC_effort/divider, 2)
 
     @property
     def defect_in(self):
@@ -135,6 +159,13 @@ class Phase(models.Model):
         return Iteration.objects.filter(phase = self).aggregate(sum = Sum('SLOC'))
 
     @property
+    def SLOC_percent(self):
+        divider = self.project.est_SLOC
+        if divider == 0:
+            return "NA"
+        return round(100*self.SLOC['sum']/divider, 2)
+
+    @property
     def effort(self):
         iteration_list = Iteration.objects.filter(phase = self)
         effort = 0
@@ -143,10 +174,28 @@ class Phase(models.Model):
         return round(effort, 2)
 
     @property
+    def effort_percent(self):
+        divider = self.project.est_effort;
+        if divider == 0:
+            return "NA"
+        return round(100*self.effort/divider, 2)
+
+    @property
     def SLOC_effort(self):
         if self.effort == 0:
             return "NA"
         return round(self.SLOC['sum']/self.effort)
+
+    @property
+    def SLOC_effort_percent(self):
+        if self.project.est_SLOC == 0:
+            return "NA"
+        if self.project.est_effort == 0:
+            return "NA"
+        divider = self.project.est_SLOC/self.project.est_effort
+        if divider == 0:
+            return "NA"
+        return round(100*self.SLOC_effort/divider, 2)
 
     @property
     def defect_in(self):
@@ -217,6 +266,13 @@ class Iteration(models.Model):
         return self.name
 
     @property
+    def SLOC_percent(self):
+        divider = self.phase.project.est_SLOC
+        if divider == 0:
+            return "NA"
+        return round(100*self.SLOC/divider, 2)
+
+    @property
     def effort(self):
         record_list = Workrecord.objects.filter(iteration = self)
         effort = 0
@@ -225,10 +281,29 @@ class Iteration(models.Model):
         return round(effort, 2)
 
     @property
+    def effort_percent(self):
+        divider = self.phase.project.est_effort
+        if divider == 0:
+            return "NA"
+        return round(100*self.effort/divider, 2)
+
+    @property
     def SLOC_effort(self):
         if self.effort == 0:
             return "NA"
         return round(self.SLOC/self.effort, 2)
+
+    @property
+    def SLOC_effort_percent(self):
+        if self.phase.project.est_SLOC == 0:
+            return "NA"
+        if self.phase.project.est_effort == 0:
+            return "NA"
+        divider = self.phase.project.est_SLOC/self.phase.project.est_effort
+        if divider == 0:
+            return "NA"
+        return round(100*self.SLOC_effort/divider, 2)
+
 
     @property
     def defect_in(self):
