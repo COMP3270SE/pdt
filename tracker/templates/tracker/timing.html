@@ -189,7 +189,7 @@
                 	<tbody id='lap'></tbody>
                 </table>
                 <input type="hidden" name="name" value="your value"/>
-                <button type='button' class="btn btn-info" type="submit">Save</button>
+                <button name= "submit_records"class="btn btn-info" type="submit" >Save</button>
             </form>
         </ul>
     </div>
@@ -214,12 +214,24 @@
                 </div>
             </div>
             <div id="table-history" class="tab-pane fade">
-                <h3>The Defects You Found </h3>
-              {% for defect in defect_list %}
+                <h3>Your Defect Reports</h3>
+                {% for defect in defect_list %}
                     <div class="list-group">
                       <a href="/tracker/{{ user.account.pk }}/defect/{{ defect.did }}" class="list-group-item">
                         <h3 class="list-group-item-heading">{{ defect.type }}</h3></br>
                         <p class="list-group-item-text">{{ defect.description }}</p>
+                        
+                      </a>
+                    </div>
+                {% endfor %}
+                <br>
+                <h3>Your Working Time Records</h3>
+                {% for record in record_list %}
+                    <div class="list-group">
+                      <a href="/tracker/{{ user.account.pk }}/record/{{ record.wid }}" class="list-group-item">
+                        <h3 class="list-group-item-heading">{{ record.wid }}</h3></br>
+                        <p class="list-group-item-text">{{ record.starttime }}</p>
+                        <p class="list-group-item-text">{{ record.endtime }}</p>
                         
                       </a>
                     </div>

@@ -154,14 +154,16 @@ def summary(request, user_id, project_id):
 			'phase_list': phase_list
 			})
 
+@login_required(login_url='/tracker')
 def timing(request, user_id, project_id):
     developer = get_object_or_404(Developer, account__pk = user_id)
     active_iteration = get_object_or_404(Iteration, status = 1, phase__project__pk = project_id)
     defect_list = Defect.objects.filter(injection_iteration__phase__project__pk = project_id)
+    record_list = Workrecord.objects.filter(developer = developer)
 
     if request.method == 'POST':
-        defect_form = DefectForm(request.POST)
         if 'submit_defect' in request.POST:
+            defect_form = DefectForm(request.POST)
             if defect_form.is_valid():
                 new_defect = defect_form.save(commit=False)
                 new_defect.removal_iteration=get_object_or_404(Iteration, status = 1, phase__project__pk = project_id)
@@ -169,6 +171,10 @@ def timing(request, user_id, project_id):
                 new_defect.save()
                 messages.success(request, 'Defect report saved.')
                 #return HttpResponseRedirect('Defect/' + str(new_defect.pk))
+        elif 'submit_records' in request.POST:
+            starttime=request.POST['starttime']
+            endtime = request.POST['endtime']
+            new_record= Workrecord.create(starttime, endtime, developer, active_iteration)
 
     defect_form = DefectForm()
 
@@ -177,6 +183,7 @@ def timing(request, user_id, project_id):
         'active_iteration': active_iteration, 
         'defect_list': defect_list,
         'defect_form': defect_form,
+        'record_list': record_list,
         })
 
 @login_required(login_url='/tracker')

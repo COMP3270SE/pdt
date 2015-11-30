@@ -377,6 +377,11 @@ class Workrecord(models.Model):
     def __unicode__(self):
         return str(self.wid)+"by"+str(self.developer.account.username)
     
+    @classmethod
+    def create(cls, starttime, endtime, developer, iteration):
+        book = cls(title=title, starttime= starttime, endtime= endtime, developer= developer, iteration= iteration)
+        return book
+
     @property
     def duration(self):
         return (self.endtime-self.starttime).total_seconds()/3600
